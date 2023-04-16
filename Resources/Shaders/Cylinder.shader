@@ -3,13 +3,14 @@ Shader "Custom/Cylinder"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-        _TopSize("Top Size", Range(0.0, 1.0)) = 0.5
-        _BottomSize("Bottom Size", Range(0.0, 1.0)) = 0.5
-        _Height("Height", Range(0.0, 1.0)) = 1.0
+        _TopSize("Top Size", float) = 0.5
+        _BottomSize("Bottom Size", float) = 0.5
+        _Height("Height", float) = 1.0
         _SpriteRendererColor("Color", Color) = (1, 1, 1, 1)
+        _Position("Position", Vector) = (0,0,0,0)
 
-        [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend("BlendSource", Float) = 1
-        [Enum(UnityEngine.Rendering.BlendMode)] _DstBlend("BlendDestination", Float) = 0
+        [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend("BlendSource", Float) = 5
+        [Enum(UnityEngine.Rendering.BlendMode)] _DstBlend("BlendDestination", Float) = 10
     }
     
     SubShader
@@ -53,6 +54,7 @@ Shader "Custom/Cylinder"
             float _BottomSize;
             float _Height;
             float4 _SpriteRendererColor;
+            float4 _Position;
 
             v2f vert(appdata v)
             {
@@ -69,7 +71,14 @@ Shader "Custom/Cylinder"
                     height = 0.0;
                 }
 
-                float4 position = float4(v.vertex.x * size, -height, v.vertex.y * size, 0.0);
+                float4 position = float4(_Position.x, -_Position.y, _Position.z, 1.0);
+                if (false)
+                {
+                    
+                } else
+                {
+                    position += float4(v.vertex.x * size, -height, v.vertex.y * size, 0.0);
+                }
 
                 o.vertex = UnityObjectToClipPos(position);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
@@ -79,6 +88,7 @@ Shader "Custom/Cylinder"
 
             fixed4 frag(v2f i) : SV_Target
             {
+                i.uv.y = 1 - i.uv.y;
                 if (_SpriteRendererColor.a == 0)
                 {
                     discard;
