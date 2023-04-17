@@ -6,21 +6,24 @@ Shader "Custom/Cylinder"
         _TopSize("Top Size", float) = 0.5
         _BottomSize("Bottom Size", float) = 0.5
         _Height("Height", float) = 1.0
-        _SpriteRendererColor("Color", Color) = (1, 1, 1, 1)
+        _Color("Color", Color) = (1, 1, 1, 1)
         _Position("Position", Vector) = (0,0,0,0)
+        _Rotation("Rotation", Vector) = (0,0,0,0)
+        _Rotate("Rotate", Range(0,1)) = 0
 
         [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend("BlendSource", Float) = 5
         [Enum(UnityEngine.Rendering.BlendMode)] _DstBlend("BlendDestination", Float) = 10
     }
-    
+
     SubShader
     {
         Tags
         {
-            "Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent"
+            "Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent" "DisableBatching" = "True"
         }
 
         Blend[_SrcBlend][_DstBlend]
+        ZTest Always
         Cull Off
         LOD 100
 
@@ -53,8 +56,10 @@ Shader "Custom/Cylinder"
             float _TopSize;
             float _BottomSize;
             float _Height;
-            float4 _SpriteRendererColor;
+            float4 _Color;
             float4 _Position;
+            float _Rotate;
+            float4x4 _RotationMatrix;
 
             v2f vert(appdata v)
             {
@@ -71,13 +76,15 @@ Shader "Custom/Cylinder"
                     height = 0.0;
                 }
 
-                float4 position = float4(_Position.x, -_Position.y, _Position.z, 1.0);
-                if (false)
+                float3 position = float3(_Position.x, -_Position.y, _Position.z);
+
+                if (_Rotate)
                 {
-                    
-                } else
+                    position += mul(float3(v.vertex.x * size, height, v.vertex.y * size), _RotationMatrix);
+                }
+                else
                 {
-                    position += float4(v.vertex.x * size, -height, v.vertex.y * size, 0.0);
+                    position += float4(v.vertex.x * size, height, v.vertex.y * size, 0.0);
                 }
 
                 o.vertex = UnityObjectToClipPos(position);
@@ -88,8 +95,8 @@ Shader "Custom/Cylinder"
 
             fixed4 frag(v2f i) : SV_Target
             {
-                i.uv.y = 1 - i.uv.y;
-                if (_SpriteRendererColor.a == 0)
+                //i.uv.y = 1 - i.uv.y;
+                if (_Color.a == 0)
                 {
                     discard;
                 }
@@ -101,7 +108,7 @@ Shader "Custom/Cylinder"
                 }
                 // apply fog
                 //UNITY_APPLY_FOG(i.fogCoord, col);
-                return col * _SpriteRendererColor;
+                return col * _Color;
             }
             ENDCG
         }
