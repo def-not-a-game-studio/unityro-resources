@@ -8,7 +8,6 @@ Shader "Custom/Cylinder"
         _Height("Height", float) = 1.0
         _Color("Color", Color) = (1, 1, 1, 1)
         _Position("Position", Vector) = (0,0,0,0)
-        _Rotation("Rotation", Vector) = (0,0,0,0)
         _Rotate("Rotate", Range(0,1)) = 0
 
         [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend("BlendSource", Float) = 5
