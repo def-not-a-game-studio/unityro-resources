@@ -10,36 +10,36 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cd5b3a47ac084824284c26ff41cf750d, type: 3}
-  m_Name: Defender
+  m_Name: EF_WARP
   m_EditorClassIdentifier: 
-  EffectId: 222
+  EffectId: 0
   CylinderParts:
-  - texture: {fileID: 2800000, guid: d89607d9838c5fb48b1a265dd797f0cd, type: 3}
-    Color: {r: 0, g: 0, b: 0, a: -0.0064000003}
+  - texture: {fileID: 2800000, guid: 61bc454b445a5634a9842b20ada588cb, type: 3}
+    Color: {r: 1, g: 1, b: 1, a: -0.0032000002}
     totalCircleSides: 20
     circleSides: 20
     repeatTextureX: 0
-    rotate: 1
+    rotate: 0
     angleX: 0
     angleY: 0
     angleZ: 0
     rotateWithCamera: 0
     rotateToTarget: 0
     rotateWithSource: 0
-    topSize: 1.5
-    bottomSize: 1.5
-    height: 10
-    position: {x: 0, y: 0, z: 0}
+    topSize: 13
+    bottomSize: 10
+    height: 0
+    position: {x: 0, y: 0, z: 0.1}
     fade: 1
-    animation: 1
+    animation: 4
     blendMode: 10
     repeat: 0
-    duration: 3000
-    duplicates: 0
-    timeBetweenDuplication: 0
+    duration: 1000
+    duplicates: 4
+    timeBetweenDuplication: 300
     wav: {fileID: 0}
     attachedEntity: 0
-    alphaMax: 0.6
+    alphaMax: 0.8
   SPRParts: []
   STRParts: []
   ThreeDParts: []
