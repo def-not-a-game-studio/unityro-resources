@@ -15,7 +15,8 @@ Shader "Custom/ModelShaderOpaque"
         LOD 200
 
         Blend SrcAlpha OneMinusSrcAlpha
-        Cull [_Cull]
+        Cull Off
+        ZTest LEqual
 
         CGPROGRAM
         #pragma surface surf Lambert alpha addshadow

@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cd5b3a47ac084824284c26ff41cf750d, type: 3}
-  m_Name: ef_coldbolt
+  m_Name: ef_firebolt
   m_EditorClassIdentifier: 
   EffectId: 0
   CylinderParts:
-  - texture: {fileID: 2800000, guid: 3ee9fa72a5132f344a8ca311134654dd, type: 3}
-    Color: {r: 1, g: 1, b: 1, a: -0.0588}
+  - texture: {fileID: 2800000, guid: 55c59bd8920ce7042a102c9ca9572503, type: 3}
+    Color: {r: 1, g: 1, b: 1, a: -0.0644}
     totalCircleSides: 20
     circleSides: 20
     repeatTextureX: 0
@@ -40,7 +40,7 @@ MonoBehaviour:
     wav: {fileID: 0}
     attachedEntity: 0
     alphaMax: 0.7
-    delay: 500
+    delay: 300
   SPRParts: []
   STRParts: []
   ThreeDParts:
@@ -49,9 +49,15 @@ MonoBehaviour:
     timeBetweenDuplication: 0
     wav: {fileID: 0}
     attachedEntity: 1
-    file: {fileID: 2800000, guid: df1a6a8ce1e377f4d8902b5e26fdbb7f, type: 3}
-    fileList: []
-    frameDelay: 0
+    file: {fileID: 0}
+    fileList:
+    - {fileID: 2800000, guid: 414ab9dac884cba479cb47845000431c, type: 3}
+    - {fileID: 2800000, guid: 51d3d46db3c4752438b74970420e4306, type: 3}
+    - {fileID: 2800000, guid: b78e41dbe6b30fd4ba72fb5686738ff0, type: 3}
+    - {fileID: 2800000, guid: 137d390510f96c94d86c6b9f1268a4cf, type: 3}
+    - {fileID: 2800000, guid: af6009145c53e0949904fd25401c3da3, type: 3}
+    - {fileID: 2800000, guid: f3e0766187fdf8f4f9ed4740c38fd280, type: 3}
+    frameDelay: 10
     sprite: {fileID: 0}
     playSprite: 0
     sprDelay: 0
