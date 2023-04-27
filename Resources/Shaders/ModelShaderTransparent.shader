@@ -33,6 +33,8 @@ Shader "Custom/ModelShaderTransparent"
         {
             half4 c = tex2D(_MainTex, IN.uv_MainTex);
 
+            clip(c.a - 0.5f);
+
             o.Albedo = c.rgb;
             o.Alpha = c.a * _Alpha;
         }
