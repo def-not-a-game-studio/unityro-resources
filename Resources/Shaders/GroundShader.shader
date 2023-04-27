@@ -24,11 +24,11 @@ Shader "Custom/GroundShader"
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
+            #pragma multi_compile_fog
 
             // compile shader into multiple variants, with and without shadows
             // (we don't care about any lightmaps yet, so skip these variants)
             #pragma multi_compile_fwdbase nolightmap nodirlightmap nodynlightmap novertexlight
-            #pragma multi_compile_fog
             // shadow helper functions and macros
             #include "AutoLight.cginc"
 

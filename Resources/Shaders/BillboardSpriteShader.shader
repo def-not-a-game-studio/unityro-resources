@@ -22,6 +22,7 @@ Shader "UnityRO/BillboardSpriteShader"
 
         CGINCLUDE
         #include "UnityCG.cginc"
+        #include "SpriteUtilities.cginc"
 
         sampler2D _MainTex;
         sampler2D _PaletteTex;
@@ -29,29 +30,6 @@ Shader "UnityRO/BillboardSpriteShader"
         float4 _MainTex_TexelSize;
         float _Alpha;
         float _UsePalette;
-
-        half4 bilinearSample(sampler2D indexT, sampler2D LUT, float2 uv, float4 indexT_TexelSize)
-        {
-            float2 TextInterval = 1.0 / indexT_TexelSize.zw;
-
-            float tlLUT = tex2D(indexT, uv).x;
-            float trLUT = tex2D(indexT, uv + float2(TextInterval.x, 0.0)).x;
-            float blLUT = tex2D(indexT, uv + float2(0.0, TextInterval.y)).x;
-            float brLUT = tex2D(indexT, uv + TextInterval).x;
-
-            float4 transparent = float4(0.0, 0.0, 0.0, 0.0);
-
-            float4 tl = tlLUT == 0.0 ? transparent : float4(tex2D(LUT, float2(tlLUT, 1.0)).rgb, 1.0);
-            float4 tr = trLUT == 0.0 ? transparent : float4(tex2D(LUT, float2(trLUT, 1.0)).rgb, 1.0);
-            float4 bl = blLUT == 0.0 ? transparent : float4(tex2D(LUT, float2(blLUT, 1.0)).rgb, 1.0);
-            float4 br = brLUT == 0.0 ? transparent : float4(tex2D(LUT, float2(brLUT, 1.0)).rgb, 1.0);
-
-            float2 f = frac(uv.xy * indexT_TexelSize.zw);
-            float4 tA = lerp(tl, tr, f.x);
-            float4 tB = lerp(bl, br, f.x);
-
-            return lerp(tA, tB, f.y);
-        }
         ENDCG
 
         Pass
@@ -72,37 +50,15 @@ Shader "UnityRO/BillboardSpriteShader"
             #pragma multi_compile_fwdbase nolightmap nodirlightmap nodynlightmap novertexlight
             // shadow helper functions and macros
             #include "AutoLight.cginc"
+            #include "LightUtilities.cginc"
 
-            #include "Lighting.cginc"
-
-            struct v2f
+            v2f_base vert(appdata_base v)
             {
-                float2 uv : TEXCOORD0;
-                SHADOW_COORDS(1) // put shadows data into TEXCOORD1
-                UNITY_FOG_COORDS(2)
-                fixed3 diff : COLOR0;
-                fixed3 ambient : COLOR1;
-                float4 pos : SV_POSITION;
-            };
-
-            v2f vert(appdata_base v)
-            {
-                v2f o;
+                v2f_base o;
                 o.uv = v.texcoord;
 
-                half3 worldNormal = UnityObjectToWorldNormal(v.normal);
-                half nl = max(0, dot(worldNormal, _WorldSpaceLightPos0.xyz));
-                o.diff = nl * _LightColor0.rgb;
-                o.ambient = ShadeSH9(half4(worldNormal, 1));
-
-                // billboard mesh towards camera
-                float3 vpos = mul((float3x3)unity_ObjectToWorld, v.vertex.xyz);
-                float4 worldCoord = float4(unity_ObjectToWorld._m03, unity_ObjectToWorld._m13, unity_ObjectToWorld._m23,
-                                           1);
-                float4 viewPos = mul(UNITY_MATRIX_V, worldCoord) + float4(vpos, 0);
-                float4 outPos = mul(UNITY_MATRIX_P, viewPos);
-
-                o.pos = outPos;
+                o = applyLighting(o, v.normal);
+                o.pos = billboardMeshTowardsCamera(v.vertex);
 
                 UNITY_TRANSFER_FOG(o, o.pos);
                 // compute shadows data
@@ -111,12 +67,9 @@ Shader "UnityRO/BillboardSpriteShader"
                 return o;
             }
 
-            fixed4 frag(v2f i) : SV_Target
+            fixed4 frag(v2f_base i) : SV_Target
             {
-                // compute shadow attenuation (1.0 = fully lit, 0.0 = fully shadowed)
-                fixed shadow = SHADOW_ATTENUATION(i);
-                // darken light's illumination with shadow, keep ambient intact
-                fixed3 lighting = i.diff * shadow + i.ambient;
+                fixed3 lighting = getLighting(i);
 
                 fixed4 col = _UsePalette
                                  ? bilinearSample(_MainTex, _PaletteTex, i.uv, _MainTex_TexelSize)
@@ -165,15 +118,7 @@ Shader "UnityRO/BillboardSpriteShader"
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
                 TRANSFER_SHADOW_CASTER_NORMALOFFSET(o);
                 o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
-                
-                // billboard mesh towards camera
-                float3 vpos = mul((float3x3)unity_ObjectToWorld, v.vertex.xyz);
-                float4 worldCoord = float4(unity_ObjectToWorld._m03, unity_ObjectToWorld._m13, unity_ObjectToWorld._m23,
-                                           1);
-                float4 viewPos = mul(UNITY_MATRIX_V, worldCoord) + float4(vpos, 0);
-                float4 outPos = mul(UNITY_MATRIX_P, viewPos);
-                
-                o.pos = outPos;
+                o.pos = billboardMeshTowardsCamera(v.vertex);
 
                 return o;
             }
