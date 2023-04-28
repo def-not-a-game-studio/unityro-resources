@@ -75,7 +75,7 @@ Shader "UnityRO/BillboardSpriteShader"
                                  ? bilinearSample(_MainTex, _PaletteTex, i.uv, _MainTex_TexelSize)
                                  : tex2D(_MainTex, i.uv);
 
-                col.rgb *= lighting;
+                col.rgb *= (lighting * 1.2);
 
                 if (col.a == 0.0) discard;
                 col.a *= _Alpha;
