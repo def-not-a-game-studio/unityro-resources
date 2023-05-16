@@ -2,9 +2,9 @@ Shader "Custom/GroundShader"
 {
     Properties
     {
-        _MainTex ("Base (RGB)", 2D) = "white" {}
-        _Lightmap ("Base (RGB)", 2D) = "white" {}
-        _Tintmap ("Base (RGB)", 2D) = "white" {}
+        _MainTex ("MainTex", 2D) = "white" {}
+        _Lightmap ("Lightmap", 2D) = "white" {}
+        _Tintmap ("Tintmap", 2D) = "white" {}
     }
     SubShader
     {
