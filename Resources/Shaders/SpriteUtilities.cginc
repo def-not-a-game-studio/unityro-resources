@@ -37,30 +37,36 @@ float4 billboardMeshTowardsCamera(float4 vertex)
 {
     // billboard mesh towards camera
     float3 vpos = mul((float3x3)unity_ObjectToWorld, vertex.xyz);
-    float4 worldCoord = float4(unity_ObjectToWorld._m03, unity_ObjectToWorld._m13, unity_ObjectToWorld._m23,
-                               1);
-    float4 viewPos = mul(UNITY_MATRIX_V, worldCoord) + float4(vpos, 0);
-    float4 outPos = mul(UNITY_MATRIX_P, viewPos);
+    float4 worldCoord = float4(unity_ObjectToWorld._m03_m13_m23, 1);
+    float4 viewPivot = mul(UNITY_MATRIX_V, worldCoord);
+
+    // construct rotation matrix
+    float3 forward = -normalize(viewPivot);
+    float3 up = mul(UNITY_MATRIX_V, float3(0, 1, 0)).xyz;
+    float3 right = normalize(cross(up, forward));
+    up = cross(forward, right);
+    const float3x3 facingRotation = float3x3(right, up, forward);
+
+    float4 viewPos = float4(viewPivot + mul(vpos, facingRotation), 1.0);
+    float4 pos = mul(UNITY_MATRIX_P, viewPos);
 
     // calculate distance to vertical billboard plane seen at this vertex's screen position
-    const float3 planeNormal = normalize(
-        (_WorldSpaceCameraPos.xyz - unity_ObjectToWorld._m03_m13_m23) * float3(1, 0, 1));
+    const float3 planeNormal = normalize((_WorldSpaceCameraPos.xyz - unity_ObjectToWorld._m03_m13_m23) * float3(1, 0, 1));
     const float3 planePoint = unity_ObjectToWorld._m03_m13_m23;
     const float3 rayStart = _WorldSpaceCameraPos.xyz;
-    const float3 rayDir = -normalize(mul(UNITY_MATRIX_I_V, float4(viewPos.xyz, 1.0)).xyz - rayStart);
-    // convert view to world, minus camera pos
-    const float dist = rayPlaneIntersection(rayDir, rayStart, planeNormal, planePoint);
+    const float3 rayDir = -normalize(mul(UNITY_MATRIX_I_V, float4(viewPos.xyz, 1.0)).xyz - rayStart); // convert view to world, minus camera pos
+    float dist = rayPlaneIntersection(rayDir, rayStart, planeNormal, planePoint);
 
     // calculate the clip space z for vertical plane
     float4 planeOutPos = mul(UNITY_MATRIX_VP, float4(rayStart + rayDir * dist, 1.0));
-    float newPosZ = planeOutPos.z / planeOutPos.w * outPos.w;
+    float newPosZ = planeOutPos.z / planeOutPos.w * pos.w;
 
     // use the closest clip space z
     #if defined(UNITY_REVERSED_Z)
-    outPos.z = max(outPos.z, newPosZ);
+    pos.z = max(pos.z, newPosZ);
     #else
-    o.pos.z = min(o.pos.z, newPosZ);
+    pos.z = min(pos.z, newPosZ);
     #endif
 
-    return outPos;
+    return pos;
 }
