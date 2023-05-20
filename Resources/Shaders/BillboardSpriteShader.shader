@@ -6,6 +6,7 @@ Shader "UnityRO/BillboardSpriteShader"
         _PaletteTex("Texture", 2D) = "white" {}
         _Alpha("Alpha", Range(0.0, 1.0)) = 1.0
         _UsePalette("Use Palette", Float) = 0
+        _Offset("Offset", Float) = 0
 
         _Color("Color", Color) = (1,1,1,1)
         _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
@@ -30,6 +31,7 @@ Shader "UnityRO/BillboardSpriteShader"
         float4 _MainTex_TexelSize;
         float _Alpha;
         float _UsePalette;
+        float _Offset;
         ENDCG
 
         Pass
@@ -38,7 +40,7 @@ Shader "UnityRO/BillboardSpriteShader"
             {
                 "LightMode" = "ForwardBase"
             }
-            Blend SrcAlpha OneMinusSrcAlpha
+            Blend One OneMinusSrcAlpha
 
             CGPROGRAM
             #pragma vertex vert
