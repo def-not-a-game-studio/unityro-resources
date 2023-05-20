@@ -48,7 +48,7 @@ half angle(float3 center, float3 pos1, float3 pos2)
     return degrees(acos(dot(dir1, dir2)));
 }
 
-float4 verticalBillboard(float4 vertex)
+float4x4 verticalBillboard()
 {
     #if defined(USING_STEREO_MATRICES)
     float3 cameraPos = lerp(unity_StereoWorldSpaceCameraPos[0], unity_StereoWorldSpaceCameraPos[1], 0.5);
@@ -76,16 +76,17 @@ float4 verticalBillboard(float4 vertex)
     objectToWorld[0].xyz = newBasis[0];
     objectToWorld[1].xyz = newBasis[1];
     objectToWorld[2].xyz = newBasis[2];
-    //Now just normal MVP multiply, but with the new objectToWorld injected in place of matrix M
-    return mul(UNITY_MATRIX_VP, mul(objectToWorld, vertex));
+
+    return objectToWorld;
 }
 
 float4 cameraDistanceBillboard(float4 vertex, float offset)
 {
+    float4x4 objectToWorld = unity_ObjectToWorld;
     float2 pos = vertex.xy;
 
-    float3 worldPos = mul(unity_ObjectToWorld, float4(pos.x, pos.y, 0, 1)).xyz;
-    float3 originPos = mul(unity_ObjectToWorld, float4(pos.x, 0, 0, 1)).xyz; //world position of origin
+    float3 worldPos = mul(objectToWorld, float4(pos.x, pos.y, 0, 1)).xyz;
+    float3 originPos = mul(objectToWorld, float4(pos.x, 0, 0, 1)).xyz; //world position of origin
     float3 upPos = originPos + float3(0, 1, 0); //up from origin
 
     float outDist = abs(pos.y); //distance from origin should always be equal to y
@@ -156,9 +157,12 @@ float getDecRate(float4 vertex, float offset)
 
 float4 billboardMeshTowardsCamera(float4 vertex)
 {
+    const float3 cameraPos = _WorldSpaceCameraPos.xyz;
+    const float3 planePoint = unity_ObjectToWorld._m03_m13_m23;
+
     // billboard mesh towards camera
     float3 vpos = mul((float3x3)unity_ObjectToWorld, vertex.xyz);
-    float4 worldCoord = float4(unity_ObjectToWorld._m03_m13_m23, 1);
+    float4 worldCoord = float4(planePoint, 1);
     float4 viewPivot = mul(UNITY_MATRIX_V, worldCoord);
 
     // construct rotation matrix
@@ -170,15 +174,18 @@ float4 billboardMeshTowardsCamera(float4 vertex)
 
     float4 viewPos = float4(viewPivot + mul(vpos, facingRotation), 1.0);
     float4 pos = mul(UNITY_MATRIX_P, viewPos);
-
+    
     // calculate distance to vertical billboard plane seen at this vertex's screen position
-    const float3 planeNormal = normalize(
-        (_WorldSpaceCameraPos.xyz - unity_ObjectToWorld._m03_m13_m23) * float3(1, 0, 1));
-    const float3 planePoint = unity_ObjectToWorld._m03_m13_m23;
-    const float3 rayStart = _WorldSpaceCameraPos.xyz;
+    const float3 planeNormal = normalize((cameraPos - planePoint) * float3(1, 0, 1));
+    const float3 rayStart = cameraPos;
     const float3 rayDir = -normalize(mul(UNITY_MATRIX_I_V, float4(viewPos.xyz, 1.0)).xyz - rayStart);
     // convert view to world, minus camera pos
     float dist = rayPlaneIntersection(rayDir, rayStart, planeNormal, planePoint);
+
+    // added check to get distance to an arbitrary ground plane
+    float groundDist = rayPlaneIntersection(rayDir, rayStart, float3(0,1,0), planePoint);
+    // use "min" distance to either plane (I think the distances are actually negative)
+    dist = max(dist, groundDist);
 
     // calculate the clip space z for vertical plane
     float4 planeOutPos = mul(UNITY_MATRIX_VP, float4(rayStart + rayDir * dist, 1.0));
