@@ -1,0 +1,139 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &225602242329174250
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4629610866301331038}
+  - component: {fileID: 5837514253124118066}
+  - component: {fileID: 6433594304436286863}
+  - component: {fileID: 2382067336591241274}
+  m_Layer: 4
+  m_Name: Water_0_
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4629610866301331038
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 225602242329174250}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: -1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5837514253124118066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 225602242329174250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84e3f20901222b84faa7cd228c36f052, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WaterInfo:
+    textureSize: 256
+    level: 1
+    type: 3
+    waveHeight: 0.060000002
+    waveSpeed: 2
+    wavePitch: 100
+    animSpeed: 3
+    images:
+    - "data/texture/\xBF\xF6\xC5\xCD/water300.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water301.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water302.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water303.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water304.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water305.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water306.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water307.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water308.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water309.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water310.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water311.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water312.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water313.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water314.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water315.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water316.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water317.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water318.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water319.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water320.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water321.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water322.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water323.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water324.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water325.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water326.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water327.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water328.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water329.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water330.jpg"
+    - "data/texture/\xBF\xF6\xC5\xCD/water331.jpg"
+--- !u!33 &6433594304436286863
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 225602242329174250}
+  m_Mesh: {fileID: 4300000, guid: 66f2d8eb727d8574a813f36d67156bfa, type: 2}
+--- !u!23 &2382067336591241274
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 225602242329174250}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 8ff81c0215a914e4fa31858a77d79d15, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
