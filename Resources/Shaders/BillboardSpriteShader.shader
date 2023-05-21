@@ -40,8 +40,8 @@ Shader "UnityRO/BillboardSpriteShader"
             {
                 "LightMode" = "ForwardBase"
             }
-            Blend One OneMinusSrcAlpha
-
+            Blend SrcAlpha OneMinusSrcAlpha
+            
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -91,7 +91,7 @@ Shader "UnityRO/BillboardSpriteShader"
 
         Pass
         {
-            Name "Caster"
+            Name "ShadowCaster"
             Tags
             {
                 "LightMode" = "ShadowCaster"
@@ -134,8 +134,8 @@ Shader "UnityRO/BillboardSpriteShader"
                                  ? bilinearSample(_MainTex, _PaletteTex, i.uv, _MainTex_TexelSize)
                                  : tex2D(_MainTex, i.uv);
 
-                clip(col.a * _Color.a - _Cutoff);
                 col.a *= _Alpha;
+                clip(col.a * _Color.a - _Cutoff);
 
                 SHADOW_CASTER_FRAGMENT(i)
             }

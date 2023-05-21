@@ -165,14 +165,15 @@ float4 billboardMeshTowardsCamera(float4 vertex)
     float4 worldCoord = float4(planePoint, 1);
     float4 viewPivot = mul(UNITY_MATRIX_V, worldCoord);
 
-    // construct rotation matrix
-    float3 forward = -normalize(viewPivot);
-    float3 up = mul(UNITY_MATRIX_V, float3(0, 1, 0)).xyz;
-    float3 right = normalize(cross(up, forward));
-    up = cross(forward, right);
-    const float3x3 facingRotation = float3x3(right, up, forward);
+    // this makes the sprites rotate to the camera when on the edge of the screen
+    // // construct rotation matrix
+    // float3 forward = -normalize(viewPivot);
+    // float3 up = mul(UNITY_MATRIX_V, float3(0, 1, 0)).xyz;
+    // float3 right = normalize(cross(up, forward));
+    // up = cross(forward, right);
+    // const float3x3 facingRotation = float3x3(right, up, forward);
 
-    float4 viewPos = float4(viewPivot + mul(vpos, facingRotation), 1.0);
+    float4 viewPos = float4(viewPivot + mul(vpos, (float3x3)unity_ObjectToWorld), 1.0);
     float4 pos = mul(UNITY_MATRIX_P, viewPos);
     
     // calculate distance to vertical billboard plane seen at this vertex's screen position
@@ -182,10 +183,10 @@ float4 billboardMeshTowardsCamera(float4 vertex)
     // convert view to world, minus camera pos
     float dist = rayPlaneIntersection(rayDir, rayStart, planeNormal, planePoint);
 
-    // added check to get distance to an arbitrary ground plane
-    float groundDist = rayPlaneIntersection(rayDir, rayStart, float3(0,1,0), planePoint);
-    // use "min" distance to either plane (I think the distances are actually negative)
-    dist = max(dist, groundDist);
+    // // added check to get distance to an arbitrary ground plane
+    // float groundDist = rayPlaneIntersection(rayDir, rayStart, float3(0,1,0), planePoint);
+    // // use "min" distance to either plane (I think the distances are actually negative)
+    // dist = max(dist, groundDist);
 
     // calculate the clip space z for vertical plane
     float4 planeOutPos = mul(UNITY_MATRIX_VP, float4(rayStart + rayDir * dist, 1.0));
