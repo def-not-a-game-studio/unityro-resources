@@ -32,6 +32,7 @@ Shader "UnityRO/BillboardSpriteShader"
         float _Alpha;
         float _UsePalette;
         float _Offset;
+        float _Rotation;
         ENDCG
 
         Pass
@@ -41,7 +42,7 @@ Shader "UnityRO/BillboardSpriteShader"
                 "LightMode" = "ForwardBase"
             }
             Blend SrcAlpha OneMinusSrcAlpha
-            
+
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
