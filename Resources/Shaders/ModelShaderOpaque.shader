@@ -19,7 +19,6 @@ Shader "Custom/ModelShaderOpaque"
             "PreviewType" = "Plane"
         }
         LOD 200
-        Blend One OneMinusSrcAlpha
 
         Pass
         {
