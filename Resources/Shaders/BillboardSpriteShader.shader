@@ -16,8 +16,8 @@ Shader "UnityRO/BillboardSpriteShader"
     {
         Tags
         {
-            "Queue" = "AlphaTest+50"
-            "RenderType" = "Geometry"
+            "Queue" = "Transparent"
+            "RenderType" = "Transparent"
             "DisableBatching" = "True"
         }
 
@@ -37,10 +37,11 @@ Shader "UnityRO/BillboardSpriteShader"
 
         Pass
         {
-            Tags
-            {
-                "LightMode" = "ForwardBase"
-            }
+//            Tags
+//            {
+//                "LightMode" = "ForwardBase"
+//            }
+            ZWrite Off
             Blend SrcAlpha OneMinusSrcAlpha
 
             CGPROGRAM
@@ -59,34 +60,29 @@ Shader "UnityRO/BillboardSpriteShader"
             {
                 v2f_base o;
 
-                UNITY_SETUP_INSTANCE_ID(v);
-                UNITY_TRANSFER_INSTANCE_ID(v, o);
-
                 o.uv = v.texcoord;
                 o = applyLighting(o, v.normal);
                 o.pos = billboardMeshTowardsCamera(v.vertex);
 
                 UNITY_TRANSFER_FOG(o, o.pos);
-                TRANSFER_SHADOW(o);
 
                 return o;
             }
 
             fixed4 frag(v2f_base i) : SV_Target
             {
-                fixed3 lighting = getLighting(i);
+                // fixed3 lighting = getLighting(i);
 
                 fixed4 col = _UsePalette
                                  ? bilinearSample(_MainTex, _PaletteTex, i.uv, _MainTex_TexelSize)
                                  : tex2D(_MainTex, i.uv);
 
-                col.rgb *= lighting * 1.1;
+                // col.rgb *= lighting * 1.1;
 
                 if (col.a == 0.0) discard;
                 col.a *= _Alpha;
 
                 UNITY_APPLY_FOG(i.fogCoord, col);
-                UNITY_SETUP_INSTANCE_ID(i);
 
                 return col;
             }
