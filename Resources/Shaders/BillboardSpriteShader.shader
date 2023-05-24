@@ -6,7 +6,7 @@ Shader "UnityRO/BillboardSpriteShader"
         _PaletteTex("Texture", 2D) = "white" {}
         _Alpha("Alpha", Range(0.0, 1.0)) = 1.0
         _UsePalette("Use Palette", Float) = 0
-        _Offset("Offset", Float) = 0
+        _Offset("Offset", Vector) = (0,0,0,0)
 
         _Color("Color", Color) = (1,1,1,1)
         _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
@@ -31,16 +31,16 @@ Shader "UnityRO/BillboardSpriteShader"
         float4 _MainTex_TexelSize;
         float _Alpha;
         float _UsePalette;
-        float _Offset;
+        float4 _Offset;
         float _Rotation;
         ENDCG
 
         Pass
         {
-//            Tags
-//            {
-//                "LightMode" = "ForwardBase"
-//            }
+            //            Tags
+            //            {
+            //                "LightMode" = "ForwardBase"
+            //            }
             ZWrite Off
             Blend SrcAlpha OneMinusSrcAlpha
 
@@ -62,7 +62,7 @@ Shader "UnityRO/BillboardSpriteShader"
 
                 o.uv = v.texcoord;
                 o = applyLighting(o, v.normal);
-                o.pos = billboardMeshTowardsCamera(v.vertex);
+                o.pos = billboardMeshTowardsCamera(v.vertex, _Offset);
 
                 UNITY_TRANSFER_FOG(o, o.pos);
 

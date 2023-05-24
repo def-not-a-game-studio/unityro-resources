@@ -155,7 +155,7 @@ float getDecRate(float4 vertex, float offset)
     return (fix_dist * 0.7 - offset / 2) / cam_dist;
 }
 
-float4 billboardMeshTowardsCamera(float4 vertex)
+float4 billboardMeshTowardsCamera(float4 vertex, float4 offset)
 {
     // billboard mesh towards camera
     float3 vpos = mul((float3x3)unity_ObjectToWorld, vertex.xyz);
@@ -164,8 +164,8 @@ float4 billboardMeshTowardsCamera(float4 vertex)
 
     // Temporary ignoring shaders billboard rotation, handled by cs script until we join all quads sprites in one
     float4 viewPos = float4(viewPivot + mul(vpos, (float3x3)unity_ObjectToWorld), 1.0);
-    // float4 pos = mul(UNITY_MATRIX_P, viewPos);
-    float4 pos = UnityObjectToClipPos(vertex);
+    float4 pos = mul(UNITY_MATRIX_P, viewPos + offset);
+    //float4 pos = UnityObjectToClipPos(vertex);
 
     // calculate distance to vertical billboard plane seen at this vertex's screen position
     const float3 planeNormal = normalize((_WorldSpaceCameraPos.xyz - unity_ObjectToWorld._m03_m13_m23) * float3(1, 0, 1));
