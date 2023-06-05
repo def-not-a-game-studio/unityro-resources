@@ -61,7 +61,7 @@ Shader "Custom/ModelShaderTransparent"
                 col.rgb *= getLighting(i);
 
                 clip(col.a - 0.5);
-                if (distance(col.rgb, float3(0,0,0)) < 0.03) discard;
+                //if (distance(col.rgb, float3(0,0,0)) < 0.03) discard;
                 
                 col.a *= _Alpha;
 

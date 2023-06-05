@@ -63,7 +63,7 @@ Shader "Custom/ModelShader2Sided"
                 col.rgb *= getLighting(i);
 
                 if (col.a == 0.0) discard;
-                if (distance(col.rgb, float3(0,0,0)) < 0.03) discard;
+                //if (distance(col.rgb, float3(0,0,0)) < 0.03) discard;
 
                 col.a *= _Alpha;
 
