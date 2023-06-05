@@ -10,6 +10,7 @@ struct v2f_base
     fixed3 diff : COLOR0;
     fixed3 ambient : COLOR1;
     float4 pos : SV_POSITION;
+    fixed4 color : COLOR2;
 };
 
 v2f_base applyLighting(v2f_base o, float3 normal)
