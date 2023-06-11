@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8524416374387700210}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0.5, y: 0.5, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -123,11 +123,13 @@ MonoBehaviour:
   <Entity>k__BackingField: {fileID: 8524416375214306475}
   <ViewerType>k__BackingField: 1
   <State>k__BackingField: 0
+  <Motion>k__BackingField: 0
   SpriteData: {fileID: 0}
   Atlas: {fileID: 0}
   Children:
   - {fileID: 8524416374696278955}
   Parent: {fileID: 0}
+  Sprites: []
 --- !u!1 &8524416374696278933
 GameObject:
   m_ObjectHideFlags: 0
@@ -250,10 +252,12 @@ MonoBehaviour:
   <Entity>k__BackingField: {fileID: 8524416375214306475}
   <ViewerType>k__BackingField: 0
   <State>k__BackingField: 0
+  <Motion>k__BackingField: 0
   SpriteData: {fileID: 0}
   Atlas: {fileID: 0}
   Children: []
   Parent: {fileID: 8524416374387700208}
+  Sprites: []
 --- !u!1 &8524416375214306454
 GameObject:
   m_ObjectHideFlags: 0
@@ -300,3 +304,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpriteViewer: {fileID: 8524416374387700208}
+  _status:
+    HairColor: 0
+    ClothesColor: 0
+    HairStyle: 0
+    Job: 0
+    IsMale: 0
+    EntityType: 0
+    GID: 0
+    AID: 0
+    GUID: 0
+    Name: 
+    MoveSpeed: 0
+    AttackSpeed: 0
+    Weapon: 0
+    Shield: 0
+    attackMotion: 6
+  EntityDirection: 0
