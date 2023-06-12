@@ -22,7 +22,7 @@ Shader "Custom/Cylinder"
         }
 
         Blend[_SrcBlend][_DstBlend]
-        ZTest Always
+        ZTest On
         Cull Off
         LOD 100
 
