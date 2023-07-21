@@ -29,10 +29,15 @@ Shader "UnityRO/BillboardSpriteShader"
         sampler2D _PaletteTex;
 
         float4 _MainTex_TexelSize;
-        float _Alpha;
-        float _UsePalette;
+        float  _Alpha;
+        float  _UsePalette;
         float4 _Offset;
-        float _Rotation;
+        float  _Rotation;
+        float4 _Color;
+
+        //from our globals
+        float4 _RoAmbientColor;
+        float4 _RoDiffuseColor;
         ENDCG
 
         Pass
@@ -71,7 +76,10 @@ Shader "UnityRO/BillboardSpriteShader"
                 fixed4 col = _UsePalette
                                  ? bilinearSample(_MainTex, _PaletteTex, i.uv, _MainTex_TexelSize)
                                  : tex2D(_MainTex, i.uv);
-                col *= i.color;
+                float4 env = 1 - ((1 - _RoDiffuseColor) * (1 - _RoAmbientColor));
+                env = env * 0.5 + 0.5;
+
+                col *= i.color * _Color * float4(env.rgb, 1);
 
                 if (col.a == 0.0) discard;
                 col.a *= _Alpha;
