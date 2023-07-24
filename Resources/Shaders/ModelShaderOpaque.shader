@@ -57,11 +57,9 @@ Shader "Custom/ModelShaderOpaque"
             fixed4 frag(v2f_base i) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
-
                 col.rgb *= getLighting(i);
 
                 if (col.a == 0.0) discard;
-                //if (distance(col.rgb, float3(0,0,0)) < 0.03) discard;
 
                 col.a *= _Alpha;
 

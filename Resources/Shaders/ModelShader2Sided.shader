@@ -26,7 +26,7 @@ Shader "Custom/ModelShader2Sided"
             {
                 "LightMode" = "ForwardBase"
             }
-            
+
             Cull Back
 
             CGPROGRAM
@@ -59,7 +59,7 @@ Shader "Custom/ModelShader2Sided"
             fixed4 frag(v2f_base i) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
-
+                //col.rgb = GammaToLinearSpace(col.rgb);
                 col.rgb *= getLighting(i);
 
                 if (col.a == 0.0) discard;
@@ -73,14 +73,14 @@ Shader "Custom/ModelShader2Sided"
             }
             ENDCG
         }
-        
+
         Pass
         {
             Tags
             {
                 "LightMode" = "ForwardBase"
             }
-            
+
             Cull Front
 
             CGPROGRAM
@@ -114,7 +114,6 @@ Shader "Custom/ModelShader2Sided"
             fixed4 frag(v2f_base i) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
-
                 col.rgb *= getLighting(i);
 
                 if (col.a == 0.0) discard;
@@ -173,7 +172,6 @@ Shader "Custom/ModelShader2Sided"
             float4 frag(v2f i) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
-
                 clip(col.a * _Color.a - _Cutoff);
 
                 SHADOW_CASTER_FRAGMENT(i)

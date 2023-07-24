@@ -57,12 +57,10 @@ Shader "Custom/ModelShaderTransparent"
             fixed4 frag(v2f_base i) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
-
                 col.rgb *= getLighting(i);
 
                 clip(col.a - 0.5);
-                //if (distance(col.rgb, float3(0,0,0)) < 0.03) discard;
-                
+
                 col.a *= _Alpha;
 
                 UNITY_APPLY_FOG(i.fogCoord, col);
@@ -117,7 +115,6 @@ Shader "Custom/ModelShaderTransparent"
             float4 frag(v2f i) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
-
                 clip(col.a * _Color.a - _Cutoff);
 
                 SHADOW_CASTER_FRAGMENT(i)

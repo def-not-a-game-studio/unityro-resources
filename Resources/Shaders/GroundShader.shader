@@ -96,8 +96,6 @@ Shader "Custom/GroundShader"
 
                 if (base.a == 0) discard;
 
-                base.rgb *= lighting;
-
                 if (length(i.uv2_tintmap))
                 {
                     fixed4 tintmap = tex2D(_Tintmap, i.uv2_tintmap);
@@ -105,7 +103,8 @@ Shader "Custom/GroundShader"
                 }
 
                 base.rgb += lightmap.rgb;
-
+                base.rgb *= lighting;
+                
                 UNITY_APPLY_FOG(i.fogCoord, base);
 
                 return base;
