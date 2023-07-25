@@ -63,7 +63,6 @@ Shader "UnityRO/BillboardSpriteShader"
 
                 o.uv = v.texcoord;
                 o.color = v.color;
-                o = applyLighting(o, v.normal);
                 o.pos = billboardMeshTowardsCamera(v.vertex, _Offset);
 
                 UNITY_TRANSFER_FOG(o, o.pos);
