@@ -64,6 +64,10 @@ Shader "Custom/GroundShader"
             float4 _Lightmap_ST;
             float4 _Tintmap_ST;
 
+            //from our globals
+            float4 _RoAmbientColor;
+            float4 _RoDiffuseColor;
+
             v2f vert(appdata v)
             {
                 v2f o;
@@ -102,9 +106,13 @@ Shader "Custom/GroundShader"
                     base *= fixed4(tintmap.bgr, 1.0);
                 }
 
+                float4 env = 1 - ((1 - _RoDiffuseColor) * (1 - _RoAmbientColor));
+                //env = env * 0.5 + 0.5;
+
                 base.rgb += lightmap.rgb;
+                base.rgb *= env.rgb;
                 base.rgb *= lighting;
-                
+
                 UNITY_APPLY_FOG(i.fogCoord, base);
 
                 return base;
