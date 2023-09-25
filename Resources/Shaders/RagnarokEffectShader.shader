@@ -61,7 +61,7 @@
             {
                 v2f o;
                 o.uv = v.uv.xy;
-                o.vertex = billboardMeshTowardsCamera(v.vertex, float4(0,0,0,0));
+                o.vertex = billboardMeshTowardsCamera(v.vertex, float4(0,0,0,0), float4(0,0,0,0), false);
 
                 return o;
             }
