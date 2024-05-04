@@ -1,6 +1,7 @@
 #include <AutoLight.cginc>
 #include <UnityCG.cginc>
-#include <UnityLightingCommon.cginc>
+
+// #include <UnityShaderVariables.cginc>
 
 half4 bilinearSample(sampler2D indexT, sampler2D LUT, float2 uv, float4 indexT_TexelSize)
 {
@@ -48,72 +49,41 @@ half angle(float3 center, float3 pos1, float3 pos2)
 	return degrees(acos(dot(dir1, dir2)));
 }
 
-float4x4 verticalBillboard()
-{
-	#if defined(USING_STEREO_MATRICES)
-    float3 cameraPos = lerp(unity_StereoWorldSpaceCameraPos[0], unity_StereoWorldSpaceCameraPos[1], 0.5);
-	#else
-	float3 cameraPos = _WorldSpaceCameraPos;
-	#endif
-
-	float3 forward = normalize(cameraPos - mul(unity_ObjectToWorld, float4(0, 0, 0, 1)).xyz);
-	float3 right = cross(forward, float3(0, 1, 0));
-	float  yawCamera = atan2(right.x, forward.x) - UNITY_PI / 2; //Add 90 for quads to face towards camera
-	float  s, c;
-	sincos(yawCamera, s, c);
-
-	float3x3 transposed = transpose((float3x3)unity_ObjectToWorld);
-	float3   scale = float3(length(transposed[0]), length(transposed[1]), length(transposed[2]));
-
-	float3x3 newBasis = float3x3(
-		float3(c * scale.x, 0, s * scale.z),
-		float3(0, scale.y, 0),
-		float3(-s * scale.x, 0, c * scale.z)
-	); //Rotate yaw to point towards camera, and scale by transform.scale
-
-	float4x4 objectToWorld = unity_ObjectToWorld;
-	//Overwrite basis vectors so the object rotation isn't taken into account
-	objectToWorld[0].xyz = newBasis[0];
-	objectToWorld[1].xyz = newBasis[1];
-	objectToWorld[2].xyz = newBasis[2];
-
-	return objectToWorld;
-}
-
-float4 billboardMeshTowardsCamera(float4 vertex, float4 offset, float4 uv, bool shadowPass)
+float4 billboardMeshTowardsCamera(float4 vertex, float4 offset, float4 uv)
 {
 	// billboard mesh towards camera
-	float3 vpos = mul((float3x3)unity_ObjectToWorld, vertex.xyz);
-	float4 worldCoord = float4(unity_ObjectToWorld._m03_m13_m23, 1);
+	float3 vpos = mul((float3x3)UNITY_MATRIX_M, vertex.xyz);
+	float4 worldCoord = float4(UNITY_MATRIX_M._m03_m13_m23, 1);
 	float4 viewPivot = mul(UNITY_MATRIX_V, worldCoord);
 
 	// Temporary ignoring shaders billboard rotation, handled by cs script until we join all quads sprites in one
-	float4 viewPos = float4(viewPivot + mul(vpos, (float3x3)unity_ObjectToWorld), 1.0);
+	float4 viewPos = float4(viewPivot + mul(vpos, (float3x3)UNITY_MATRIX_M), 1.0);
 	float4 pos = mul(UNITY_MATRIX_P, viewPos + offset);
-	//float4 pos = UnityObjectToClipPos(vertex);
 
 	// calculate distance to vertical billboard plane seen at this vertex's screen position
-	const float3 planeNormal = normalize((_WorldSpaceCameraPos.xyz - unity_ObjectToWorld._m03_m13_m23) * float3(1, 0, 1));
-	const float3 planePoint = unity_ObjectToWorld._m03_m13_m23;
+	const float3 planeNormal = normalize((_WorldSpaceCameraPos.xyz - UNITY_MATRIX_M._m03_m13_m23) * float3(1, 0, 1));
+	const float3 planePoint = UNITY_MATRIX_M._m03_m13_m23;
 	const float3 rayStart = _WorldSpaceCameraPos.xyz;
 	const float3 rayDir = -normalize(mul(UNITY_MATRIX_I_V, float4(viewPos.xyz, 1.0)).xyz - rayStart); // convert view to world, minus camera pos
-	float        dist = rayPlaneIntersection(rayDir, rayStart, planeNormal, planePoint);
+
+	float dist = rayPlaneIntersection(rayDir, rayStart, planeNormal, planePoint);
 
 	// added check to get distance to an arbitrary ground plane
 	float groundDist = rayPlaneIntersection(rayDir, rayStart, float3(0, 1, 0), planePoint);
+
 	// use "min" distance to either plane (I think the distances are actually negative)
-	dist = max(dist, groundDist);
+	dist = min(dist, groundDist);
 
 	// calculate the clip space z for vertical plane
 	float4 planeOutPos = mul(UNITY_MATRIX_VP, float4(rayStart + rayDir * dist, 1.0));
-	float  newPosZ = planeOutPos.z / planeOutPos.w * pos.w;
+	float newPosZ = planeOutPos.z / planeOutPos.w * pos.w;
 
 	// use the closest clip space z
-	#if defined(UNITY_REVERSED_Z)
+    #if defined(UNITY_REVERSED_Z)
 	pos.z = max(pos.z, newPosZ) + uv.z;
-	#else
-    pos.z = min(pos.z, newPosZ);
-	#endif
+    #else
+	pos.z = min(pos.z, newPosZ) + uv.z;
+    #endif
 
 	return pos;
 }

@@ -17,79 +17,100 @@ Shader "UnityRO/BillboardSpriteShader"
         Tags
         {
             "Queue" = "Geometry"
+            "RenderPipeline" = "UniversalPipeline"
+            "RenderType" = "Transparent"
+            "UniversalMaterialType" = "Lit"
         }
-
-        CGINCLUDE
-        #include "UnityCG.cginc"
-        #include "SpriteUtilities.cginc"
-
-        sampler2D _MainTex;
-        sampler2D _PaletteTex;
-
-        float4 _MainTex_TexelSize;
-        float  _Alpha;
-        float  _UsePalette;
-        float4 _Offset;
-        float  _Rotation;
-        float4 _Color;
-        ENDCG
 
         Pass
         {
+            Name "Universal Forward"
             Tags
             {
-                "LightMode" = "ForwardBase"
+                "LightMode" = "UniversalForward"
             }
-            ZWrite Off
-            Blend SrcAlpha OneMinusSrcAlpha
 
-            CGPROGRAM
+            Cull Off
+            Blend One OneMinusSrcAlpha, One OneMinusSrcAlpha
+            ZTest LEqual
+            ZWrite On
+
+            HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            #pragma multi_compile_fog
 
-            // compile shader into multiple variants, with and without shadows
-            // (we don't care about any lightmaps yet, so skip these variants)
-            #pragma multi_compile_fwdbase nolightmap nodirlightmap nodynlightmap novertexlight
-            // shadow helper functions and macros
-            #include "AutoLight.cginc"
-            #include "LightUtilities.cginc"
+            #include <UnityCG.cginc>
+            #include <AutoLight.cginc>
+            #include "SpriteUtilities.cginc"
 
-
-            v2f_base vert(appdata_full v)
+            struct Varyings
             {
-                v2f_base o;
+                float4 positionHCS : SV_POSITION;
+                float2 uv : TEXCOORD0;
+                // SHADOW_COORDS (                1                ) // put shadows data into TEXCOORD1
+                // UNITY_FOG_COORDS(2)
+                fixed3 diff : COLOR0;
+                fixed3 ambient : COLOR1;
+                fixed4 color : COLOR2;
+            };
 
-                o.uv = v.texcoord;
-                o.color = v.color;
-                o = applyLighting(o, v.normal);
-                o.pos = billboardMeshTowardsCamera(v.vertex, _Offset, v.texcoord, false);
+            struct Attributes
+            {
+                float4 vertex : POSITION;
+                float4 tangent : TANGENT;
+                float3 normal : NORMAL;
+                float4 texcoord : TEXCOORD0;
+                float4 texcoord1 : TEXCOORD1;
+                float4 texcoord2 : TEXCOORD2;
+                float4 texcoord3 : TEXCOORD3;
+                fixed4 color : COLOR;
+                // UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
 
-                UNITY_TRANSFER_FOG(o, o.pos);
-                TRANSFER_SHADOW(o);
+            CBUFFER_START(UnityPerMaterial)
+                sampler2D _MainTex;
+                sampler2D _PaletteTex;
 
-                return o;
+                float4 _MainTex_TexelSize;
+                float _Alpha;
+                float _UsePalette;
+                float4 _Offset;
+                float _Rotation;
+                float4 _Color;
+            CBUFFER_END
+
+            Varyings vert(Attributes IN)
+            {
+                Varyings OUT;
+
+                OUT.uv = IN.texcoord;
+                OUT.color = IN.color;
+                // OUT = applyLighting(OUT, v.normal);
+                OUT.positionHCS = billboardMeshTowardsCamera(IN.vertex, _Offset, IN.texcoord);
+
+                // UNITY_TRANSFER_FOG(o, o.pos);
+                TRANSFER_SHADOW(OUT);
+
+                return OUT;
             }
 
-            fixed4 frag(v2f_base i) : SV_Target
+            fixed4 frag(Varyings IN) : SV_Target
             {
-                const fixed3 lighting = getLighting(i);
+                // const fixed3 lighting = getLighting(i);
 
-                fixed4 col = _UsePalette
-                 ? bilinearSample(_MainTex, _PaletteTex, i.uv, _MainTex_TexelSize)
-                 : tex2D(_MainTex, i.uv);
+                fixed4 col = _UsePalette ? bilinearSample(_MainTex, _PaletteTex, IN.uv, _MainTex_TexelSize) : tex2D(_MainTex, IN.uv);
 
-                col *= i.color * _Color;
-                col.rgb *= lighting;
+                col *= IN.color * _Color;
+                // col.rgb *= lighting;
 
                 if (col.a == 0.0) discard;
                 col.a *= _Alpha;
 
-                UNITY_APPLY_FOG(i.fogCoord, col);
+                // UNITY_APPLY_FOG(i.fogCoord, col);
 
                 return col;
             }
-            ENDCG
+            ENDHLSL
         }
 
         Pass
@@ -100,47 +121,60 @@ Shader "UnityRO/BillboardSpriteShader"
                 "LightMode" = "ShadowCaster"
             }
 
-            CGPROGRAM
+            HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
             #pragma target 2.0
             #pragma multi_compile_shadowcaster
             #pragma multi_compile_instancing // allow instanced shadow pass for most of the shaders
 
-            struct v2f
+            #include <UnityCG.cginc>
+            #include "SpriteUtilities.cginc"
+
+            struct Varyings
             {
                 V2F_SHADOW_CASTER;
                 float2 uv : TEXCOORD1;
                 UNITY_VERTEX_OUTPUT_STEREO
             };
 
-            uniform float4 _MainTex_ST;
+            CBUFFER_START(UnityPerMaterial)
+                sampler2D _MainTex;
+                sampler2D _PaletteTex;
 
-            v2f vert(appdata_base v)
+                uniform float4 _MainTex_ST;
+                float4 _MainTex_TexelSize;
+                float _Alpha;
+                float _UsePalette;
+                float4 _Offset;
+                float _Rotation;
+                float4 _Color;
+                uniform fixed _Cutoff;
+            CBUFFER_END
+
+            Varyings vert(appdata_base v)
             {
-                v2f o;
+                Varyings OUT;
                 UNITY_SETUP_INSTANCE_ID(v);
-                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-                TRANSFER_SHADOW_CASTER_NORMALOFFSET(o);
-                o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
-                o.pos = billboardMeshTowardsCamera(v.vertex, (0, 0, 0, 0), (0,0,0,0), true);
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
+                TRANSFER_SHADOW_CASTER_NORMALOFFSET(OUT);
+                OUT.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
+                OUT.pos = billboardMeshTowardsCamera(v.vertex, float4(0, 0, 0, 0), float4(0, 0, 0, 0));
 
-                return o;
+                return OUT;
             }
 
-            uniform fixed _Cutoff;
-
-            float4 frag(v2f i) : SV_Target
+            float4 frag(Varyings IN) : SV_Target
             {
                 fixed4 col = _UsePalette
-                                    ? bilinearSample(_MainTex, _PaletteTex, i.uv, _MainTex_TexelSize)
-                                    : tex2D(_MainTex, i.uv);
+                         ? bilinearSample(_MainTex, _PaletteTex, IN.uv, _MainTex_TexelSize)
+                         : tex2D(_MainTex, IN.uv);
 
                 clip(col.a * _Color.a - _Cutoff);
 
                 SHADOW_CASTER_FRAGMENT(i)
             }
-            ENDCG
+            ENDHLSL
         }
     }
 }

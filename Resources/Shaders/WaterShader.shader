@@ -7,7 +7,7 @@
 		_WaveAmplitude("Wave Amplitude", Float) = 0.19
 		_WaveSpeed("Wave Speed", Float) = 0.016
 		_WaveLenght("Wave Lenght", Float) = 0.5
-		_Color("Tint", Color) = (1,1,1,1)
+		_Color("Tint", Color) = (1,1,1,0.5)
 		[MaterialToggle] PixelSnap("Pixel snap", Float) = 0
 	}
 
