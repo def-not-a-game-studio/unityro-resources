@@ -505,7 +505,7 @@ Shader "UnityRO/SuperCustom"
                 surface.Emission = float3(0, 0, 0);
                 surface.Metallic = 0;
                 surface.Smoothness = 0;
-                surface.Occlusion = 1;
+                surface.Occlusion = 0.5;
                 surface.Alpha = _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float;
                 surface.AlphaClipThreshold = 0.5;
                 return surface;
@@ -1061,7 +1061,7 @@ Shader "UnityRO/SuperCustom"
                 surface.Emission = float3(0, 0, 0);
                 surface.Metallic = 0;
                 surface.Smoothness = 0;
-                surface.Occlusion = 1;
+                surface.Occlusion = 0.5;
                 surface.Alpha = _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float;
                 surface.AlphaClipThreshold = 0.5;
                 return surface;
