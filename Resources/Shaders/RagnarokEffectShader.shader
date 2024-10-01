@@ -44,6 +44,7 @@
             {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
+                fixed4 color : COLOR;
             };
 
             struct v2f
@@ -51,6 +52,7 @@
                 float2 uv : TEXCOORD0;
                 //UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
+                fixed4 color : COLOR0;
             };
 
             sampler2D _MainTex;
@@ -62,6 +64,7 @@
                 v2f o;
                 o.uv = v.uv.xy;
                 o.vertex = billboardMeshTowardsCamera(v.vertex, float4(0,0,0,0), float4(0,0,0,0));
+                o.color = v.color;
 
                 return o;
             }
@@ -70,6 +73,7 @@
             {
                 // sample the texture
                 fixed4 col = tex2D(_MainTex, i.uv) * _Color;
+                col *= i.color;
 
                 if (distance(col.rgb, float3(0,0,0)) < 0.1) discard;
                 if (col.a == 0) discard;
