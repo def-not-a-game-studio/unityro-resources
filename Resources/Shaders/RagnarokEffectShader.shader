@@ -19,7 +19,7 @@
             "PreviewType" = "Plane"
             "CanUseSpriteAtlas" = "True"
             "ForceNoShadowCasting" = "True"
-            "DisableBatching" = "True"
+            "DisableBatching" = "False"
         }
         LOD 100
 
