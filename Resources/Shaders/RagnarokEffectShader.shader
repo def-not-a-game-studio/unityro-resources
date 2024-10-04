@@ -4,8 +4,8 @@
     {
         _MainTex("Texture", 2D) = "white" {}
         _Color("Color", Color) = (1,1,1,1)
-        [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend("BlendSource", Float) = 1
-        [Enum(UnityEngine.Rendering.BlendMode)] _DstBlend("BlendDestination", Float) = 0
+        [PerRendererData] [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend("BlendSource", Float) = 1
+        [PerRendererData] [Enum(UnityEngine.Rendering.BlendMode)] _DstBlend("BlendDestination", Float) = 0
         [Enum(UnityEngine.Rendering.CullMode)] _Cull("Cull", Float) = 0
         [Toggle] _ZWrite("ZWrite", Float) = 0
     }
@@ -32,10 +32,11 @@
         Pass
         {
             CGPROGRAM
+            #pragma multi_compile_fog
+            #pragma multi_compile_instancing
+            
             #pragma vertex vert
             #pragma fragment frag keepalpha
-            // make fog work
-            #pragma multi_compile_fog
 
             #include "UnityCG.cginc"
             #include "SpriteUtilities.cginc"
@@ -45,14 +46,17 @@
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
                 fixed4 color : COLOR;
+                
+                UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
             struct v2f
             {
                 float2 uv : TEXCOORD0;
-                //UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
                 fixed4 color : COLOR0;
+                
+                UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
             sampler2D _MainTex;
@@ -62,6 +66,10 @@
             v2f vert(appdata v)
             {
                 v2f o;
+
+                UNITY_SETUP_INSTANCE_ID(v);
+                UNITY_TRANSFER_INSTANCE_ID(v, o);
+                
                 o.uv = v.uv.xy;
                 o.vertex = billboardMeshTowardsCamera(v.vertex, float4(0,0,0,0), float4(0,0,0,0));
                 o.color = v.color;
@@ -71,15 +79,13 @@
 
             fixed4 frag(v2f i) : SV_Target
             {
-                // sample the texture
-                fixed4 col = tex2D(_MainTex, i.uv) * _Color;
-                col *= i.color;
+                UNITY_SETUP_INSTANCE_ID(i);
+                
+                fixed4 col = tex2D(_MainTex, i.uv) * i.color;
 
-                if (distance(col.rgb, float3(0,0,0)) < 0.1) discard;
+                // if (distance(col.rgb, float3(0,0,0)) < 0.1) discard;
                 if (col.a == 0) discard;
 
-                // apply fog
-                //UNITY_APPLY_FOG(i.fogCoord, col);
                 return col;
             }
             ENDCG
