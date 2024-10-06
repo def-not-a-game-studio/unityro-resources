@@ -1,89 +1,68 @@
-#include <AutoLight.cginc>
-#include <UnityCG.cginc>
-
-// #include <UnityShaderVariables.cginc>
-
 half4 bilinearSample(sampler2D indexT, sampler2D LUT, float2 uv, float4 indexT_TexelSize)
 {
-	float2 TextInterval = 1.0 / indexT_TexelSize.zw;
+    float2 TextInterval = 1.0 / indexT_TexelSize.zw;
 
-	float tlLUT = tex2D(indexT, uv).x;
-	float trLUT = tex2D(indexT, uv + float2(TextInterval.x, 0.0)).x;
-	float blLUT = tex2D(indexT, uv + float2(0.0, TextInterval.y)).x;
-	float brLUT = tex2D(indexT, uv + TextInterval).x;
+    float tlLUT = tex2D(indexT, uv).x;
+    float trLUT = tex2D(indexT, uv + float2(TextInterval.x, 0.0)).x;
+    float blLUT = tex2D(indexT, uv + float2(0.0, TextInterval.y)).x;
+    float brLUT = tex2D(indexT, uv + TextInterval).x;
 
-	float4 transparent = float4(0.0, 0.0, 0.0, 0.0);
+    float4 transparent = float4(0.0, 0.0, 0.0, 0.0);
 
-	float4 tl = tlLUT == 0.0 ? transparent : float4(tex2D(LUT, float2(tlLUT, 1.0)).rgb, 1.0);
-	float4 tr = trLUT == 0.0 ? transparent : float4(tex2D(LUT, float2(trLUT, 1.0)).rgb, 1.0);
-	float4 bl = blLUT == 0.0 ? transparent : float4(tex2D(LUT, float2(blLUT, 1.0)).rgb, 1.0);
-	float4 br = brLUT == 0.0 ? transparent : float4(tex2D(LUT, float2(brLUT, 1.0)).rgb, 1.0);
+    float4 tl = tlLUT == 0.0 ? transparent : float4(tex2D(LUT, float2(tlLUT, 1.0)).rgb, 1.0);
+    float4 tr = trLUT == 0.0 ? transparent : float4(tex2D(LUT, float2(trLUT, 1.0)).rgb, 1.0);
+    float4 bl = blLUT == 0.0 ? transparent : float4(tex2D(LUT, float2(blLUT, 1.0)).rgb, 1.0);
+    float4 br = brLUT == 0.0 ? transparent : float4(tex2D(LUT, float2(brLUT, 1.0)).rgb, 1.0);
 
-	float2 f = frac(uv.xy * indexT_TexelSize.zw);
-	float4 tA = lerp(tl, tr, f.x);
-	float4 tB = lerp(bl, br, f.x);
+    float2 f = frac(uv.xy * indexT_TexelSize.zw);
+    float4 tA = lerp(tl, tr, f.x);
+    float4 tB = lerp(bl, br, f.x);
 
-	return lerp(tA, tB, f.y);
+    return lerp(tA, tB, f.y);
 }
 
 float rayPlaneIntersection(float3 rayDir, float3 rayPos, float3 planeNormal, float3 planePos)
 {
-	float denom = dot(planeNormal, rayDir);
-	denom = max(denom, 0.000001);
-	float3 diff = planePos - rayPos;
-	return dot(diff, planeNormal) / denom;
+    float denom = dot(planeNormal, rayDir);
+    denom = max(denom, 0.000001);
+    float3 diff = planePos - rayPos;
+    return dot(diff, planeNormal) / denom;
 }
 
-float4 rotate(float4 vert, float rotation)
+float4 billboardMeshTowardsCamera(float3 vertex, float4 offset, float4 uv)
 {
-	float4 vOut = vert;
-	vOut.x = vert.x * cos(radians(rotation)) - vert.y * sin(radians(rotation));
-	vOut.y = vert.x * sin(radians(rotation)) + vert.y * cos(radians(rotation));
-	return vOut;
-}
+    // billboard mesh towards camera
+    float3 vpos = mul((float3x3)unity_ObjectToWorld, vertex.xyz);
+    float4 worldCoord = float4(unity_ObjectToWorld._m03_m13_m23, 1);
+    float4 viewPivot = mul(UNITY_MATRIX_V, worldCoord);
 
-half angle(float3 center, float3 pos1, float3 pos2)
-{
-	float3 dir1 = normalize(pos1 - center);
-	float3 dir2 = normalize(pos2 - center);
-	return degrees(acos(dot(dir1, dir2)));
-}
+    // construct rotation matrix
+    float3 forward = -normalize(viewPivot);
+    float3 up = mul(UNITY_MATRIX_V, float3(0,1,0)).xyz;
+    float3 right = normalize(cross(up,forward));
+    up = cross(forward,right);
+    float3x3 facingRotation = float3x3(right, up, forward);
 
-float4 billboardMeshTowardsCamera(float4 vertex, float4 offset, float4 uv)
-{
-	// billboard mesh towards camera
-	float3 vpos = mul((float3x3)UNITY_MATRIX_M, vertex.xyz);
-	float4 worldCoord = float4(UNITY_MATRIX_M._m03_m13_m23, 1);
-	float4 viewPivot = mul(UNITY_MATRIX_V, worldCoord);
+    float4 viewPos = float4(viewPivot + mul(vpos, facingRotation), 1.0);
+    float4 pos = mul(UNITY_MATRIX_P, viewPos + offset);
 
-	// Temporary ignoring shaders billboard rotation, handled by cs script until we join all quads sprites in one
-	float4 viewPos = float4(viewPivot + mul(vpos, (float3x3)UNITY_MATRIX_M), 1.0);
-	float4 pos = mul(UNITY_MATRIX_P, viewPos + offset);
+    // calculate distance to vertical billboard plane seen at this vertex's screen position
+    const float3 planeNormal = normalize((_WorldSpaceCameraPos.xyz - unity_ObjectToWorld._m03_m13_m23) * float3(1,0,1));
+    const float3 planePoint = UNITY_MATRIX_M._m03_m13_m23;
+    const float3 rayStart = _WorldSpaceCameraPos.xyz;
+    const float3 rayDir = -normalize(mul(UNITY_MATRIX_I_V, float4(viewPos.xyz, 1.0)).xyz - rayStart);
+    float dist = rayPlaneIntersection(rayDir, rayStart, planeNormal, planePoint);
 
-	// calculate distance to vertical billboard plane seen at this vertex's screen position
-	const float3 planeNormal = normalize((_WorldSpaceCameraPos.xyz - UNITY_MATRIX_M._m03_m13_m23) * float3(1, 0, 1));
-	const float3 planePoint = UNITY_MATRIX_M._m03_m13_m23;
-	const float3 rayStart = _WorldSpaceCameraPos.xyz;
-	const float3 rayDir = -normalize(mul(UNITY_MATRIX_I_V, float4(viewPos.xyz, 1.0)).xyz - rayStart); // convert view to world, minus camera pos
+    // calculate the clip space z for vertical plane
+    float4 planeOutPos = mul(UNITY_MATRIX_VP, float4(rayStart + rayDir * dist, 1.0));
+    float newPosZ = planeOutPos.z / planeOutPos.w * pos.w;
 
-	float dist = rayPlaneIntersection(rayDir, rayStart, planeNormal, planePoint);
-
-	// added check to get distance to an arbitrary ground plane
-	float groundDist = rayPlaneIntersection(rayDir, rayStart, float3(0, 1, 0), planePoint);
-
-	// use "min" distance to either plane (I think the distances are actually negative)
-	dist = min(dist, groundDist);
-
-	// calculate the clip space z for vertical plane
-	float4 planeOutPos = mul(UNITY_MATRIX_VP, float4(rayStart + rayDir * dist, 1.0));
-	float newPosZ = planeOutPos.z / planeOutPos.w * pos.w;
-
-	// use the closest clip space z
+    // use the closest clip space z
     #if defined(UNITY_REVERSED_Z)
-	pos.z = max(pos.z, newPosZ) + uv.z;
+    pos.z = max(pos.z, newPosZ) + uv.z;
     #else
 	pos.z = min(pos.z, newPosZ) + uv.z;
     #endif
 
-	return pos;
+    return pos;
 }
