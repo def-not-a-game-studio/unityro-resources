@@ -474,7 +474,7 @@ Shader "UnityRO/SpriteEffectShader"
                 surface.Emission = float3(0, 0, 0);
                 surface.Metallic = float(0);
                 surface.Smoothness = float(0);
-                surface.Occlusion = float(1);
+                surface.Occlusion = float(0.5);
                 surface.Alpha = _Multiply_71bb1cbe1acb4636ba1406e5493af757_Out_2_Float;
                 surface.AlphaClipThreshold = float(0);
                 return surface;
@@ -964,7 +964,7 @@ Shader "UnityRO/SpriteEffectShader"
                 surface.Emission = float3(0, 0, 0);
                 surface.Metallic = float(0);
                 surface.Smoothness = float(0);
-                surface.Occlusion = float(1);
+                surface.Occlusion = float(0.5);
                 surface.Alpha = _Multiply_71bb1cbe1acb4636ba1406e5493af757_Out_2_Float;
                 surface.AlphaClipThreshold = float(0);
                 return surface;
