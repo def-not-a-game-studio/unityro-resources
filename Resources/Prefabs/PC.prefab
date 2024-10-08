@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1729563701523706761
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7709474149708298512}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7709474149708298512
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1729563701523706761}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8524416375214306452}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8524416374387700210
 GameObject:
   m_ObjectHideFlags: 0
@@ -13,7 +44,7 @@ GameObject:
   - component: {fileID: 8524416374387700214}
   - component: {fileID: 8524416374387700215}
   - component: {fileID: 8524416374387700208}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,6 +58,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8524416374387700210}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -34,7 +66,6 @@ Transform:
   m_Children:
   - {fileID: 8524416374696278932}
   m_Father: {fileID: 8524416375214306452}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &8524416374387700213
 MeshRenderer:
@@ -53,6 +84,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -122,10 +156,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Entity>k__BackingField: {fileID: 8524416375214306475}
   <ViewerType>k__BackingField: 1
-  <State>k__BackingField: 0
-  <Motion>k__BackingField: 0
-  SpriteData: {fileID: 0}
-  Atlas: {fileID: 0}
+  SpriteData: {fileID: 11400000, guid: 55da0db3aeb86294783111482cec32e8, type: 2}
+  Atlas: {fileID: 2800000, guid: aff7720855b488b41903c3d5298655a9, type: 3}
   Children:
   - {fileID: 8524416374696278955}
   Parent: {fileID: 0}
@@ -143,7 +175,7 @@ GameObject:
   - component: {fileID: 8524416374696278953}
   - component: {fileID: 8524416374696278954}
   - component: {fileID: 8524416374696278955}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -157,13 +189,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8524416374696278933}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8524416374387700209}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &8524416374696278952
 MeshRenderer:
@@ -182,6 +214,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -190,7 +225,7 @@ MeshRenderer:
     firstSubMesh: 0
     subMeshCount: 0
   m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
+  m_ProbeAnchor: {fileID: 8524416374387700209}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
   m_ReceiveGI: 1
@@ -251,10 +286,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Entity>k__BackingField: {fileID: 8524416375214306475}
   <ViewerType>k__BackingField: 0
-  <State>k__BackingField: 0
-  <Motion>k__BackingField: 0
-  SpriteData: {fileID: 0}
-  Atlas: {fileID: 0}
+  SpriteData: {fileID: 11400000, guid: cfb647cc027324846aefa1bfe2bbba5e, type: 2}
+  Atlas: {fileID: 2800000, guid: d6ba9e006822d6048a702de9eeec8323, type: 3}
   Children: []
   Parent: {fileID: 8524416374387700208}
   Sprites: []
@@ -282,14 +315,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8524416375214306454}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8524416374387700209}
+  - {fileID: 7709474149708298512}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8524416375214306475
 MonoBehaviour:
@@ -304,6 +338,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpriteViewer: {fileID: 8524416374387700208}
+  EffectRenderer: {fileID: 0}
   _status:
     HairColor: 0
     ClothesColor: 0
@@ -317,7 +352,14 @@ MonoBehaviour:
     Name: 
     MoveSpeed: 0
     AttackSpeed: 0
+    AttackedSpeed: 0
     Weapon: 0
     Shield: 0
-    attackMotion: 6
+    HP: 0
+    MaxHP: 0
+    SP: 0
+    MaxSP: 0
+    Money: 0
+    Level: 0
+  _state: 0
   EntityDirection: 0

@@ -220,7 +220,7 @@ Shader "UnityRO/SpriteShader"
             PackedVaryings PackVaryings(Varyings input)
             {
                 PackedVaryings output;
-                    ZERO_INITIALIZE(PackedVaryings, output);
+                ZERO_INITIALIZE(PackedVaryings, output);
                 output.positionCS = input.positionCS;
             #if defined(LIGHTMAP_ON)
             output.staticLightmapUV = input.staticLightmapUV;
@@ -326,56 +326,6 @@ Shader "UnityRO/SpriteShader"
         #endif
 
             // Graph Functions
-
-            float rayPlaneIntersection(float3 rayDir, float3 rayPos, float3 planeNormal, float3 planePos)
-            {
-                float denom = dot(planeNormal, rayDir);
-                denom = max(denom, 0.000001);
-                float3 diff = planePos - rayPos;
-                return dot(diff, planeNormal) / denom;
-            }
-
-            float4 billboardMeshTowardsCamera(float3 vertex, float4 offset, float4 uv)
-            {
-                // billboard mesh towards camera
-                float3 vpos = mul((float3x3)UNITY_MATRIX_M, vertex.xyz);
-                float4 worldCoord = float4(UNITY_MATRIX_M._m03_m13_m23, 1);
-                float4 viewPivot = mul(UNITY_MATRIX_V, worldCoord);
-
-                // Temporary ignoring shaders billboard rotation, handled by cs script until we join all quads sprites in one
-                float4 viewPos = float4(viewPivot + mul(vpos, (float3x3)UNITY_MATRIX_M), 1.0);
-                float4 pos = mul(UNITY_MATRIX_P, viewPos + offset);
-
-                // calculate distance to vertical billboard plane seen at this vertex's screen position
-                const float3 planeNormal = normalize(
-                    (_WorldSpaceCameraPos.xyz - UNITY_MATRIX_M._m03_m13_m23) * float3(1, 0, 1));
-                const float3 planePoint = UNITY_MATRIX_M._m03_m13_m23;
-                const float3 rayStart = _WorldSpaceCameraPos.xyz;
-                const float3 rayDir = -normalize(mul(UNITY_MATRIX_I_V, float4(viewPos.xyz, 1.0)).xyz - rayStart);
-                // convert view to world, minus camera pos
-
-                float dist = rayPlaneIntersection(rayDir, rayStart, planeNormal, planePoint);
-
-                // added check to get distance to an arbitrary ground plane
-                float groundDist = rayPlaneIntersection(rayDir, rayStart, float3(0, 1, 0), planePoint);
-
-                // use "min" distance to either plane (I think the distances are actually negative)
-                dist = max(dist, groundDist);
-
-                // calculate the clip space z for vertical plane
-                float4 planeOutPos = mul(UNITY_MATRIX_VP, float4(rayStart + rayDir * dist, 1.0));
-                float newPosZ = planeOutPos.z / planeOutPos.w * pos.w;
-
-                // use the closest clip space z
-    #if defined(UNITY_REVERSED_Z)
-                pos.z = max(pos.z, newPosZ) + uv.z;
-    #else
-	            pos.z = min(pos.z, newPosZ) + uv.z;
-    #endif
-
-                return pos;
-            }
-
             void RoAmbientLight_float(out float3 env)
             {
                 env = (0, 0, 0);
@@ -465,8 +415,8 @@ Shader "UnityRO/SpriteShader"
                 float _Property_c039ca64edc24793861c8c7e8b83f77f_Out_0_Float = _Alpha;
                 float _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float;
                 Unity_Multiply_float_float(_SampleTexture2D_b0f05b539966481dbb7399b28c9c0e66_A_7_Float,
-                            _Property_c039ca64edc24793861c8c7e8b83f77f_Out_0_Float,
-                            _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float);
+                                       _Property_c039ca64edc24793861c8c7e8b83f77f_Out_0_Float,
+                                       _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float);
                 surface.BaseColor = _Multiply_19431fd2a16840a6bbd8a644ab42a5d1_Out_2_Vector3;
                 surface.NormalTS = IN.TangentSpaceNormal;
                 surface.Emission = float3(0, 0, 0);
@@ -536,6 +486,7 @@ Shader "UnityRO/SpriteShader"
 
         #include "Packages/com.unity.render-pipelines.universal/Editor/ShaderGraph/Includes/Varyings.hlsl"
         #include "Packages/com.unity.render-pipelines.universal/Editor/ShaderGraph/Includes/PBRForwardPass.hlsl"
+        #include "../SpriteUtilities.cginc"
 
             // --------------------------------------------------
             // Visual Effect Vertex Invocations
@@ -552,7 +503,6 @@ Shader "UnityRO/SpriteShader"
                 packedOutput = PackVaryings(output);
                 return packedOutput;
             }
-            
             ENDHLSL
         }
         Pass
@@ -749,7 +699,7 @@ Shader "UnityRO/SpriteShader"
             PackedVaryings PackVaryings(Varyings input)
             {
                 PackedVaryings output;
-                    ZERO_INITIALIZE(PackedVaryings, output);
+                ZERO_INITIALIZE(PackedVaryings, output);
                 output.positionCS = input.positionCS;
             #if defined(LIGHTMAP_ON)
             output.staticLightmapUV = input.staticLightmapUV;
@@ -944,7 +894,8 @@ Shader "UnityRO/SpriteShader"
                 float _Property_c039ca64edc24793861c8c7e8b83f77f_Out_0_Float = _Alpha;
                 float _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float;
                 Unity_Multiply_float_float(_SampleTexture2D_b0f05b539966481dbb7399b28c9c0e66_A_7_Float,
-       _Property_c039ca64edc24793861c8c7e8b83f77f_Out_0_Float, _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float);
+                                       _Property_c039ca64edc24793861c8c7e8b83f77f_Out_0_Float,
+                                       _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float);
                 surface.BaseColor = _Multiply_19431fd2a16840a6bbd8a644ab42a5d1_Out_2_Vector3;
                 surface.NormalTS = IN.TangentSpaceNormal;
                 surface.Emission = float3(0, 0, 0);
@@ -966,7 +917,7 @@ Shader "UnityRO/SpriteShader"
             VertexDescriptionInputs BuildVertexDescriptionInputs(Attributes input)
             {
                 VertexDescriptionInputs output;
-                    ZERO_INITIALIZE(VertexDescriptionInputs, output);
+                ZERO_INITIALIZE(VertexDescriptionInputs, output);
 
                 output.ObjectSpaceNormal = input.normalOS;
                 output.ObjectSpaceTangent = input.tangentOS.xyz;
@@ -1156,7 +1107,7 @@ Shader "UnityRO/SpriteShader"
             PackedVaryings PackVaryings(Varyings input)
             {
                 PackedVaryings output;
-                    ZERO_INITIALIZE(PackedVaryings, output);
+                ZERO_INITIALIZE(PackedVaryings, output);
                 output.positionCS = input.positionCS;
                 output.texCoord0.xyzw = input.texCoord0;
                 output.normalWS.xyz = input.normalWS;
@@ -1292,8 +1243,8 @@ Shader "UnityRO/SpriteShader"
                 float _Property_c039ca64edc24793861c8c7e8b83f77f_Out_0_Float = _Alpha;
                 float _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float;
                 Unity_Multiply_float_float(_SampleTexture2D_b0f05b539966481dbb7399b28c9c0e66_A_7_Float,
-                        _Property_c039ca64edc24793861c8c7e8b83f77f_Out_0_Float,
-                        _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float);
+                                       _Property_c039ca64edc24793861c8c7e8b83f77f_Out_0_Float,
+                                       _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float);
                 surface.Alpha = _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float;
                 surface.AlphaClipThreshold = 0.5;
                 return surface;
@@ -1321,7 +1272,7 @@ Shader "UnityRO/SpriteShader"
             SurfaceDescriptionInputs BuildSurfaceDescriptionInputs(Varyings input)
             {
                 SurfaceDescriptionInputs output;
-                ZERO_INITIALIZE(SurfaceDescriptionInputs, output);
+                    ZERO_INITIALIZE(SurfaceDescriptionInputs, output);
 
         #ifdef HAVE_VFX_MODIFICATION
         #if VFX_USE_GRAPH_VALUES
@@ -1639,8 +1590,8 @@ Shader "UnityRO/SpriteShader"
                 float _Property_c039ca64edc24793861c8c7e8b83f77f_Out_0_Float = _Alpha;
                 float _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float;
                 Unity_Multiply_float_float(_SampleTexture2D_b0f05b539966481dbb7399b28c9c0e66_A_7_Float,
-                                                    _Property_c039ca64edc24793861c8c7e8b83f77f_Out_0_Float,
-                                                    _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float);
+                                           _Property_c039ca64edc24793861c8c7e8b83f77f_Out_0_Float,
+                                           _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float);
                 surface.NormalTS = IN.TangentSpaceNormal;
                 surface.Alpha = _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float;
                 surface.AlphaClipThreshold = 0.5;
@@ -1657,7 +1608,7 @@ Shader "UnityRO/SpriteShader"
             VertexDescriptionInputs BuildVertexDescriptionInputs(Attributes input)
             {
                 VertexDescriptionInputs output;
-                ZERO_INITIALIZE(VertexDescriptionInputs, output);
+                    ZERO_INITIALIZE(VertexDescriptionInputs, output);
 
                 output.ObjectSpaceNormal = input.normalOS;
                 output.ObjectSpaceTangent = input.tangentOS.xyz;
@@ -1669,7 +1620,7 @@ Shader "UnityRO/SpriteShader"
             SurfaceDescriptionInputs BuildSurfaceDescriptionInputs(Varyings input)
             {
                 SurfaceDescriptionInputs output;
-                    ZERO_INITIALIZE(SurfaceDescriptionInputs, output);
+                ZERO_INITIALIZE(SurfaceDescriptionInputs, output);
 
         #ifdef HAVE_VFX_MODIFICATION
         #if VFX_USE_GRAPH_VALUES
@@ -2008,8 +1959,8 @@ Shader "UnityRO/SpriteShader"
                 float _Property_c039ca64edc24793861c8c7e8b83f77f_Out_0_Float = _Alpha;
                 float _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float;
                 Unity_Multiply_float_float(_SampleTexture2D_b0f05b539966481dbb7399b28c9c0e66_A_7_Float,
-              _Property_c039ca64edc24793861c8c7e8b83f77f_Out_0_Float,
-              _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float);
+                                           _Property_c039ca64edc24793861c8c7e8b83f77f_Out_0_Float,
+                                           _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float);
                 surface.BaseColor = _Multiply_19431fd2a16840a6bbd8a644ab42a5d1_Out_2_Vector3;
                 surface.Emission = float3(0, 0, 0);
                 surface.Alpha = _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float;
@@ -2027,7 +1978,7 @@ Shader "UnityRO/SpriteShader"
             VertexDescriptionInputs BuildVertexDescriptionInputs(Attributes input)
             {
                 VertexDescriptionInputs output;
-                    ZERO_INITIALIZE(VertexDescriptionInputs, output);
+                ZERO_INITIALIZE(VertexDescriptionInputs, output);
 
                 output.ObjectSpaceNormal = input.normalOS;
                 output.ObjectSpaceTangent = input.tangentOS.xyz;
@@ -2204,7 +2155,7 @@ Shader "UnityRO/SpriteShader"
             PackedVaryings PackVaryings(Varyings input)
             {
                 PackedVaryings output;
-                    ZERO_INITIALIZE(PackedVaryings, output);
+                ZERO_INITIALIZE(PackedVaryings, output);
                 output.positionCS = input.positionCS;
                 output.texCoord0.xyzw = input.texCoord0;
             #if UNITY_ANY_INSTANCING_ENABLED
@@ -2338,8 +2289,8 @@ Shader "UnityRO/SpriteShader"
                 float _Property_c039ca64edc24793861c8c7e8b83f77f_Out_0_Float = _Alpha;
                 float _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float;
                 Unity_Multiply_float_float(_SampleTexture2D_b0f05b539966481dbb7399b28c9c0e66_A_7_Float,
-                      _Property_c039ca64edc24793861c8c7e8b83f77f_Out_0_Float,
-                      _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float);
+                                       _Property_c039ca64edc24793861c8c7e8b83f77f_Out_0_Float,
+                                       _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float);
                 surface.Alpha = _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float;
                 surface.AlphaClipThreshold = 0.5;
                 return surface;
@@ -2367,7 +2318,7 @@ Shader "UnityRO/SpriteShader"
             SurfaceDescriptionInputs BuildSurfaceDescriptionInputs(Varyings input)
             {
                 SurfaceDescriptionInputs output;
-                ZERO_INITIALIZE(SurfaceDescriptionInputs, output);
+                    ZERO_INITIALIZE(SurfaceDescriptionInputs, output);
 
         #ifdef HAVE_VFX_MODIFICATION
         #if VFX_USE_GRAPH_VALUES
@@ -2532,7 +2483,7 @@ Shader "UnityRO/SpriteShader"
             PackedVaryings PackVaryings(Varyings input)
             {
                 PackedVaryings output;
-                    ZERO_INITIALIZE(PackedVaryings, output);
+                ZERO_INITIALIZE(PackedVaryings, output);
                 output.positionCS = input.positionCS;
                 output.texCoord0.xyzw = input.texCoord0;
             #if UNITY_ANY_INSTANCING_ENABLED
@@ -2666,8 +2617,8 @@ Shader "UnityRO/SpriteShader"
                 float _Property_c039ca64edc24793861c8c7e8b83f77f_Out_0_Float = _Alpha;
                 float _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float;
                 Unity_Multiply_float_float(_SampleTexture2D_b0f05b539966481dbb7399b28c9c0e66_A_7_Float,
-                  _Property_c039ca64edc24793861c8c7e8b83f77f_Out_0_Float,
-                  _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float);
+                                       _Property_c039ca64edc24793861c8c7e8b83f77f_Out_0_Float,
+                                       _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float);
                 surface.Alpha = _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float;
                 surface.AlphaClipThreshold = 0.5;
                 return surface;
@@ -2683,7 +2634,7 @@ Shader "UnityRO/SpriteShader"
             VertexDescriptionInputs BuildVertexDescriptionInputs(Attributes input)
             {
                 VertexDescriptionInputs output;
-                ZERO_INITIALIZE(VertexDescriptionInputs, output);
+                    ZERO_INITIALIZE(VertexDescriptionInputs, output);
 
                 output.ObjectSpaceNormal = input.normalOS;
                 output.ObjectSpaceTangent = input.tangentOS.xyz;
@@ -2695,7 +2646,7 @@ Shader "UnityRO/SpriteShader"
             SurfaceDescriptionInputs BuildSurfaceDescriptionInputs(Varyings input)
             {
                 SurfaceDescriptionInputs output;
-                ZERO_INITIALIZE(SurfaceDescriptionInputs, output);
+                    ZERO_INITIALIZE(SurfaceDescriptionInputs, output);
 
         #ifdef HAVE_VFX_MODIFICATION
         #if VFX_USE_GRAPH_VALUES
@@ -2861,7 +2812,7 @@ Shader "UnityRO/SpriteShader"
             PackedVaryings PackVaryings(Varyings input)
             {
                 PackedVaryings output;
-                    ZERO_INITIALIZE(PackedVaryings, output);
+                ZERO_INITIALIZE(PackedVaryings, output);
                 output.positionCS = input.positionCS;
                 output.texCoord0.xyzw = input.texCoord0;
             #if UNITY_ANY_INSTANCING_ENABLED
@@ -3017,8 +2968,8 @@ Shader "UnityRO/SpriteShader"
                 float _Property_c039ca64edc24793861c8c7e8b83f77f_Out_0_Float = _Alpha;
                 float _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float;
                 Unity_Multiply_float_float(_SampleTexture2D_b0f05b539966481dbb7399b28c9c0e66_A_7_Float,
-                                _Property_c039ca64edc24793861c8c7e8b83f77f_Out_0_Float,
-                                _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float);
+                                       _Property_c039ca64edc24793861c8c7e8b83f77f_Out_0_Float,
+                                       _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float);
                 surface.BaseColor = _Multiply_19431fd2a16840a6bbd8a644ab42a5d1_Out_2_Vector3;
                 surface.Alpha = _Multiply_e7098b4c6cd944299db3a1f5ae67cdee_Out_2_Float;
                 surface.AlphaClipThreshold = 0.5;
@@ -3047,7 +2998,7 @@ Shader "UnityRO/SpriteShader"
             SurfaceDescriptionInputs BuildSurfaceDescriptionInputs(Varyings input)
             {
                 SurfaceDescriptionInputs output;
-                ZERO_INITIALIZE(SurfaceDescriptionInputs, output);
+                    ZERO_INITIALIZE(SurfaceDescriptionInputs, output);
 
         #ifdef HAVE_VFX_MODIFICATION
         #if VFX_USE_GRAPH_VALUES
