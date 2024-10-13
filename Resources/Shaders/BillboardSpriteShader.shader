@@ -98,7 +98,9 @@ Shader "UnityRO/BillboardSpriteShader"
             {
                 // const fixed3 lighting = getLighting(i);
 
-                fixed4 col = _UsePalette ? bilinearSample(_MainTex, _PaletteTex, IN.uv, _MainTex_TexelSize) : tex2D(_MainTex, IN.uv);
+                fixed4 col = _UsePalette
+                                 ? bilinearSample(_MainTex, _PaletteTex, IN.uv, _MainTex_TexelSize)
+                                 : tex2D(_MainTex, IN.uv);
 
                 col *= IN.color * _Color;
                 // col.rgb *= lighting;
@@ -167,12 +169,12 @@ Shader "UnityRO/BillboardSpriteShader"
             float4 frag(Varyings IN) : SV_Target
             {
                 fixed4 col = _UsePalette
-                         ? bilinearSample(_MainTex, _PaletteTex, IN.uv, _MainTex_TexelSize)
-                         : tex2D(_MainTex, IN.uv);
+                                 ? bilinearSample(_MainTex, _PaletteTex, IN.uv, _MainTex_TexelSize)
+                                 : tex2D(_MainTex, IN.uv);
 
                 clip(col.a * _Color.a - _Cutoff);
 
-                SHADOW_CASTER_FRAGMENT(i)
+                    SHADOW_CASTER_FRAGMENT(i)
             }
             ENDHLSL
         }
