@@ -93,7 +93,7 @@ Shader "UnityRO/SpriteShaderCustomLight"
                 float4 shadowCoordinates = GetShadowCoord(positions);
                 // Pass the shadow coordinates to the fragment shader
                 OUT.shadowCoords = shadowCoordinates;
-                
+
                 // The lightmap UV is usually in TEXCOORD1
                 // If lightmaps are disabled, OUTPUT_LIGHTMAP_UV does nothing
                 float3 normal = GetVertexNormalInputs(IN.normal).normalWS;
@@ -127,34 +127,84 @@ Shader "UnityRO/SpriteShaderCustomLight"
         }
         Pass
         {
+            Name "ShadowCaster"
             Tags
             {
                 "LightMode"="ShadowCaster"
             }
+            Cull Off
+            ZTest LEqual
+            ZWrite On
+            ColorMask 0
 
-            CGPROGRAM
+            HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            #pragma multi_compile_shadowcaster
-            #include "UnityCG.cginc"
 
-            struct v2f
+            #pragma multi_compile_vertex _ _CASTING_PUNCTUAL_LIGHT_SHADOW
+            #pragma multi_compile_fragment _ LOD_FADE_CROSSFADE
+
+            #define _NORMALMAP 1
+            #define _NORMAL_DROPOFF_TS 1
+            #define ATTRIBUTES_NEED_NORMAL
+            #define ATTRIBUTES_NEED_TANGENT
+            #define ATTRIBUTES_NEED_TEXCOORD0
+            #define VARYINGS_NEED_NORMAL_WS
+            #define VARYINGS_NEED_TEXCOORD0
+            #define FEATURES_GRAPH_VERTEX
+            /* WARNING: $splice Could not find named fragment 'PassInstancing' */
+            #define SHADERPASS SHADERPASS_SHADOWCASTER
+            #define _ALPHATEST_ON 1
+            #define USE_UNITY_CROSSFADE 1
+
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "SpriteUtilities.cginc"
+
+            struct Varyings
             {
-                V2F_SHADOW_CASTER;
+                float4 positionHCS : SV_POSITION;
+                float2 uv : TEXCOORD0;
+                float4 color : COLOR2;
             };
 
-            v2f vert(appdata_base v)
+            struct Attributes
             {
-                v2f o;
-                TRANSFER_SHADOW_CASTER_NORMALOFFSET(o)
-                return o;
+                float4 vertex : POSITION;
+                float4 texcoord : TEXCOORD0;
+                float4 color : COLOR;
+            };
+
+            CBUFFER_START(UnityPerMaterial)
+                sampler2D _MainTex;
+                float _Alpha;
+                float4 _Offset;
+                float4 _Color;
+                float _Cutoff;
+            CBUFFER_END
+
+
+            Varyings vert(Attributes IN)
+            {
+                Varyings OUT;
+
+                OUT.uv = IN.texcoord;
+                OUT.color = IN.color;
+                // OUT.positionHCS = TransformObjectToHClip(IN.vertex.xyz);
+                OUT.positionHCS = billboardMeshTowardsCamera(IN.vertex, _Offset, IN.texcoord, true);
+
+                return OUT;
             }
 
-            float4 frag(v2f i) : SV_Target
+            float4 frag(Varyings IN) : SV_Target
             {
-                SHADOW_CASTER_FRAGMENT(i)
+                float4 col = tex2D(_MainTex, IN.uv);
+                col.a *= IN.color.a;
+                if (col.a == 0) discard;
+
+                return col;
             }
-            ENDCG
+            ENDHLSL
         }
     }
 }

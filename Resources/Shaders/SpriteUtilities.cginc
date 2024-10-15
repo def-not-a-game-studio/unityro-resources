@@ -29,7 +29,7 @@ float rayPlaneIntersection(float3 rayDir, float3 rayPos, float3 planeNormal, flo
     return dot(diff, planeNormal) / denom;
 }
 
-float4 billboardMeshTowardsCamera(float3 vertex, float4 offset, float4 uv)
+float4 billboardMeshTowardsCamera(float3 vertex, float4 offset, float4 uv, bool isShadow = false)
 {
     // billboard mesh towards camera
     float3 vpos = mul((float3x3)unity_ObjectToWorld, vertex.xyz);
@@ -38,16 +38,17 @@ float4 billboardMeshTowardsCamera(float3 vertex, float4 offset, float4 uv)
 
     // construct rotation matrix
     float3 forward = -normalize(viewPivot);
-    float3 up = mul(UNITY_MATRIX_V, float3(0,1,0)).xyz;
-    float3 right = normalize(cross(up,forward));
-    up = cross(forward,right);
+    float3 up = mul(UNITY_MATRIX_V, float3(0, 1, 0)).xyz;
+    float3 right = normalize(cross(up, forward));
+    up = cross(forward, right);
     float3x3 facingRotation = float3x3(right, up, forward);
 
     float4 viewPos = float4(viewPivot + mul(vpos, facingRotation), 1.0);
     float4 pos = mul(UNITY_MATRIX_P, viewPos + offset);
 
     // calculate distance to vertical billboard plane seen at this vertex's screen position
-    const float3 planeNormal = normalize((_WorldSpaceCameraPos.xyz - unity_ObjectToWorld._m03_m13_m23) * float3(1,0,1));
+    const float3 planeNormal = normalize(
+        (_WorldSpaceCameraPos.xyz - unity_ObjectToWorld._m03_m13_m23) * float3(1, 0, 1));
     const float3 planePoint = UNITY_MATRIX_M._m03_m13_m23;
     const float3 rayStart = _WorldSpaceCameraPos.xyz;
     const float3 rayDir = -normalize(mul(UNITY_MATRIX_I_V, float4(viewPos.xyz, 1.0)).xyz - rayStart);
@@ -58,11 +59,14 @@ float4 billboardMeshTowardsCamera(float3 vertex, float4 offset, float4 uv)
     float newPosZ = planeOutPos.z / planeOutPos.w * pos.w;
 
     // use the closest clip space z
-    #if defined(UNITY_REVERSED_Z)
+    if (!isShadow)
+    {
+#if defined(UNITY_REVERSED_Z)
     pos.z = max(pos.z, newPosZ) + uv.z;
-    #else
-	pos.z = min(pos.z, newPosZ) + uv.z;
-    #endif
+#else
+    pos.z = min(pos.z, newPosZ) + uv.z;
+#endif
+    }
 
     return pos;
 }
