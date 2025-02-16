@@ -44,7 +44,7 @@ float4 billboardMeshTowardsCamera(float3 vertex, float4 offset, float4 uv, bool 
     float3x3 facingRotation = float3x3(right, up, forward);
 
     float4 viewPos = float4(viewPivot + mul(vpos, facingRotation), 1.0);
-    float4 pos = mul(UNITY_MATRIX_P, viewPos + offset);
+    float4 pos = mul(UNITY_MATRIX_P, viewPos + (offset / 32));
 
     // calculate distance to vertical billboard plane seen at this vertex's screen position
     const float3 planeNormal = normalize(

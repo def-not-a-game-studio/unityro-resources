@@ -112,7 +112,7 @@ Shader "UnityRO/SpriteShaderCustomLight"
             {
                 float4 col = tex2D(_MainTex, IN.uv);
                 // col *= _Color;
-                col.a *= IN.color.a;
+                // col.a *= IN.color.a;
                 if (col.a == 0) discard;
 
                 // ensures we never get too dark neither too bright
