@@ -14,7 +14,7 @@ Shader "UnityRO/SpriteEffectShader"
         {
             "RenderPipeline"="UniversalPipeline"
             "RenderType"="Transparent"
-            "UniversalMaterialType" = "Lit"
+            "UniversalMaterialType" = "Unlit"
             "Queue"="Transparent+10"
             "DisableBatching"="LODFading"
             "ShaderGraphShader"="true"
@@ -112,7 +112,7 @@ Shader "UnityRO/SpriteEffectShader"
             {
                 float4 col = tex2D(_MainTex, IN.uv);
                 // col *= _Color;
-                // col.a *= IN.color.a;
+                col.a *= IN.color.a;
                 if (col.a == 0) discard;
 
                 // ensures we never get too dark neither too bright
