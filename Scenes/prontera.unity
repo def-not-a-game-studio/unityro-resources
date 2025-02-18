@@ -42,7 +42,8 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 12
+  serializedVersion: 13
+  m_BakeOnSceneLoad: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -193,7 +194,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6713385060683650440, guid: 0a58189579632a344ad03b73410b3842, type: 3}
       propertyPath: m_Intensity
-      value: 0.5
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6713385060683650440, guid: 0a58189579632a344ad03b73410b3842, type: 3}
+      propertyPath: m_ColorTemperature
+      value: 5899
+      objectReference: {fileID: 0}
+    - target: {fileID: 6713385060683650440, guid: 0a58189579632a344ad03b73410b3842, type: 3}
+      propertyPath: m_UseColorTemperature
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7805245961050155907, guid: 0a58189579632a344ad03b73410b3842, type: 3}
       propertyPath: m_LocalPosition.x
