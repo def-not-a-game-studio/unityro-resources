@@ -6,6 +6,7 @@ Shader "UnityRO/SpriteShaderCustomLight"
         _Offset("Offset", Vector) = (0,0,0,0)
         _Alpha("Alpha", Range(0.0, 1.0)) = 1.0
         _Color("Color", Color) = (1,1,1,1)
+        _AttenuateAmbient("Attenuate Ambient", Float) = 0
     }
 
     SubShader
@@ -78,6 +79,7 @@ Shader "UnityRO/SpriteShaderCustomLight"
                 float4 _Offset;
                 float4 _Color;
                 float _Cutoff;
+                float _AttenuateAmbient;
             CBUFFER_END
 
             Varyings vert(Attributes IN)
@@ -119,7 +121,14 @@ Shader "UnityRO/SpriteShaderCustomLight"
                 half shadowAmount = clamp(GetMainLight(IN.shadowCoords).shadowAttenuation, 0.4, 1.0);
                 float3 diff = max(float3(0.1, 0.1, 0.1), min(float3(0.6, 0.6, 0.6), IN.diff));
                 float3 lighting = diff * shadowAmount + (_MainLightColor * 0.5);
-                col.rgb *= lighting;
+                if (_AttenuateAmbient)
+                {
+                    col.rgb *= lighting / 0.3;
+                }
+                else
+                {
+                    col.rgb *= lighting;
+                }
 
                 return col;
             }
