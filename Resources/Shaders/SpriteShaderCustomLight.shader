@@ -121,14 +121,15 @@ Shader "UnityRO/SpriteShaderCustomLight"
                 half shadowAmount = clamp(GetMainLight(IN.shadowCoords).shadowAttenuation, 0.4, 1.0);
                 float3 diff = max(float3(0.1, 0.1, 0.1), min(float3(0.6, 0.6, 0.6), IN.diff));
                 float3 lighting = diff * shadowAmount + (_MainLightColor * 0.5);
-                if (_AttenuateAmbient)
-                {
-                    col.rgb *= lighting / 0.3;
-                }
-                else
-                {
+                // TODO: figure this out
+                // if (_AttenuateAmbient)
+                // {
+                //     col.rgb *= lighting / 0.3;
+                // }
+                // else
+                // {
                     col.rgb *= lighting;
-                }
+                // }
 
                 return col;
             }
