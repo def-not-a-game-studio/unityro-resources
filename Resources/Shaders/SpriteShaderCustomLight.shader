@@ -6,6 +6,7 @@ Shader "UnityRO/SpriteShaderCustomLight"
         _Offset("Offset", Vector) = (0,0,0,0)
         _Alpha("Alpha", Range(0.0, 1.0)) = 1.0
         _Color("Color", Color) = (1,1,1,1)
+        _Cutoff("Cutoff", Float) = 0
         _AttenuateAmbient("Attenuate Ambient", Float) = 0
     }
 
@@ -114,7 +115,7 @@ Shader "UnityRO/SpriteShaderCustomLight"
             {
                 float4 col = tex2D(_MainTex, IN.uv);
                 // col *= _Color;
-                col.a *= IN.color.a;
+                col.a *= IN.color.a * _Alpha;
                 if (col.a == 0) discard;
 
                 // ensures we never get too dark neither too bright
@@ -208,8 +209,10 @@ Shader "UnityRO/SpriteShaderCustomLight"
 
             float4 frag(Varyings IN) : SV_Target
             {
+                if (_Alpha < 1.0) discard;
+                
                 float4 col = tex2D(_MainTex, IN.uv);
-                col.a *= IN.color.a;
+                col.a *= IN.color.a * _Alpha;
                 if (col.a == 0) discard;
 
                 return col;
