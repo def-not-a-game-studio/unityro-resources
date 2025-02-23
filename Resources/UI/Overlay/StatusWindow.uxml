@@ -1,0 +1,217 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/3rdparty/unityro-resources/Resources/UI/Overlay/StatusWindow.uss?fileID=7433441132597879392&amp;guid=7a18a193cc6ec4b4988d361b5c4a655e&amp;type=3#StatusWindow" />
+    <ui:VisualElement name="StatusWindowRoot" data-source="project://database/Assets/3rdparty/unityro-resources/Resources/UI/Overlay/Bindings/StatusWindowSource.asset?fileID=11400000&amp;guid=de1c3f269abfa4dd587f6bd90fb12be0&amp;type=2#StatusWindowSource" class="StatusWindowRoot">
+        <ui:VisualElement name="StatusRow" class="StatusWindowRow">
+            <ui:Label text="Str" name="StatusName" tooltip="Strength" class="StatusName" />
+            <ui:VisualElement name="StatusValueBox" class="StatusValueBox">
+                <ui:VisualElement name="StatusValueRaw" class="StatusValueRaw">
+                    <ui:Label text="999 + 999" name="StatusValue" data-source-path="Str" class="StatusValue">
+                        <Bindings>
+                            <ui:DataBinding property="text" binding-mode="ToTarget" />
+                        </Bindings>
+                    </ui:Label>
+                </ui:VisualElement>
+                <ui:VisualElement name="StatusValueSpace" class="StatusValueSpace" />
+                <ui:VisualElement name="StatusValueBonus" class="StatusValueBonus">
+                    <ui:Label text="0" name="StatusValue" data-source-path="StrBonus" class="StatusValue" style="-unity-text-align: middle-center;">
+                        <Bindings>
+                            <ui:DataBinding property="text" binding-mode="ToTarget" />
+                        </Bindings>
+                    </ui:Label>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="AdditionalStatusContainer" class="AdditionalStatusContainer" style="flex-grow: 1;">
+                <ui:VisualElement name="AdditionalStatus" class="AdditionalStatus" style="flex-grow: 1; align-content: stretch; justify-content: space-between;">
+                    <ui:Label text="Atk" name="AdditionalStatusName" tooltip="Attack" class="StatusName" />
+                    <ui:Label name="AdditionalStatusValue" text="9999" data-source-path="Atk" class="StatusValue" style="justify-content: flex-start; align-content: flex-start; -unity-text-align: middle-right; width: auto;">
+                        <Bindings>
+                            <ui:DataBinding property="text" binding-mode="ToTarget" />
+                        </Bindings>
+                    </ui:Label>
+                </ui:VisualElement>
+                <ui:VisualElement name="AdditionalStatus" class="AdditionalStatus" style="flex-grow: 1; align-content: stretch; justify-content: space-between; margin-left: 4px;">
+                    <ui:Label text="Def" name="AdditionalStatusName" tooltip="Attack" class="StatusName" />
+                    <ui:Label name="AdditionalStatusValue" text="9999" data-source-path="Def" class="StatusValue" style="justify-content: flex-start; align-content: flex-start; -unity-text-align: middle-right; width: auto;">
+                        <Bindings>
+                            <ui:DataBinding property="text" binding-mode="ToTarget" />
+                        </Bindings>
+                    </ui:Label>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="StatusRow" class="StatusWindowRow">
+            <ui:Label text="Agi" name="StatusName" tooltip="Strength" class="StatusName" />
+            <ui:VisualElement name="StatusValueBox" class="StatusValueBox">
+                <ui:VisualElement name="StatusValueRaw" class="StatusValueRaw">
+                    <ui:Label text="999 + 999" name="StatusValue" data-source-path="Agi" class="StatusValue">
+                        <Bindings>
+                            <ui:DataBinding property="text" binding-mode="ToTarget" />
+                        </Bindings>
+                    </ui:Label>
+                </ui:VisualElement>
+                <ui:VisualElement name="StatusValueSpace" class="StatusValueSpace" />
+                <ui:VisualElement name="StatusValueBonus" class="StatusValueBonus">
+                    <ui:Label text="0" name="StatusValue" data-source-path="AgiBonus" class="StatusValue" style="-unity-text-align: middle-center;">
+                        <Bindings>
+                            <ui:DataBinding property="text" binding-mode="ToTarget" />
+                        </Bindings>
+                    </ui:Label>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="AdditionalStatusContainer" class="AdditionalStatusContainer" style="flex-grow: 1;">
+                <ui:VisualElement name="AdditionalStatus" class="AdditionalStatus" style="flex-grow: 1; align-content: stretch; justify-content: space-between;">
+                    <ui:Label text="Matk" name="AdditionalStatusName" tooltip="Attack" class="StatusName" />
+                    <ui:Label name="AdditionalStatusValue" text="9999" data-source-path="Matk" class="StatusValue" style="justify-content: flex-start; align-content: flex-start; -unity-text-align: middle-right; width: auto;">
+                        <Bindings>
+                            <ui:DataBinding property="text" binding-mode="ToTarget" />
+                        </Bindings>
+                    </ui:Label>
+                </ui:VisualElement>
+                <ui:VisualElement name="AdditionalStatus" class="AdditionalStatus" style="flex-grow: 1; align-content: stretch; justify-content: space-between; margin-left: 4px;">
+                    <ui:Label text="Mdef" name="AdditionalStatusName" tooltip="Attack" class="StatusName" />
+                    <ui:Label name="AdditionalStatusValue" text="9999" data-source-path="Mdef" class="StatusValue" style="justify-content: flex-start; align-content: flex-start; -unity-text-align: middle-right; width: auto;">
+                        <Bindings>
+                            <ui:DataBinding property="text" binding-mode="ToTarget" />
+                        </Bindings>
+                    </ui:Label>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="StatusRow" class="StatusWindowRow">
+            <ui:Label text="Vit" name="StatusName" tooltip="Strength" class="StatusName" />
+            <ui:VisualElement name="StatusValueBox" class="StatusValueBox">
+                <ui:VisualElement name="StatusValueRaw" class="StatusValueRaw">
+                    <ui:Label text="999 + 999" name="StatusValue" data-source-path="Vit" class="StatusValue">
+                        <Bindings>
+                            <ui:DataBinding property="text" binding-mode="ToTarget" />
+                        </Bindings>
+                    </ui:Label>
+                </ui:VisualElement>
+                <ui:VisualElement name="StatusValueSpace" class="StatusValueSpace" />
+                <ui:VisualElement name="StatusValueBonus" class="StatusValueBonus">
+                    <ui:Label text="0" name="StatusValue" data-source-path="VitBonus" class="StatusValue" style="-unity-text-align: middle-center;">
+                        <Bindings>
+                            <ui:DataBinding property="text" binding-mode="ToTarget" />
+                        </Bindings>
+                    </ui:Label>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="AdditionalStatusContainer" class="AdditionalStatusContainer" style="flex-grow: 1;">
+                <ui:VisualElement name="AdditionalStatus" class="AdditionalStatus" style="flex-grow: 1; align-content: stretch; justify-content: space-between;">
+                    <ui:Label text="Hit" name="AdditionalStatusName" tooltip="Attack" class="StatusName" />
+                    <ui:Label name="AdditionalStatusValue" text="9999" data-source-path="Hit" class="StatusValue" style="justify-content: flex-start; align-content: flex-start; -unity-text-align: middle-right; width: auto;">
+                        <Bindings>
+                            <ui:DataBinding property="text" binding-mode="ToTarget" />
+                        </Bindings>
+                    </ui:Label>
+                </ui:VisualElement>
+                <ui:VisualElement name="AdditionalStatus" class="AdditionalStatus" style="flex-grow: 1; align-content: stretch; justify-content: space-between; margin-left: 4px;">
+                    <ui:Label text="Flee" name="AdditionalStatusName" tooltip="Attack" class="StatusName" />
+                    <ui:Label name="AdditionalStatusValue" text="9999" data-source-path="Flee" class="StatusValue" style="justify-content: flex-start; align-content: flex-start; -unity-text-align: middle-right; width: auto;">
+                        <Bindings>
+                            <ui:DataBinding property="text" binding-mode="ToTarget" />
+                        </Bindings>
+                    </ui:Label>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="StatusRow" class="StatusWindowRow">
+            <ui:Label text="Int" name="StatusName" tooltip="Strength" class="StatusName" />
+            <ui:VisualElement name="StatusValueBox" class="StatusValueBox">
+                <ui:VisualElement name="StatusValueRaw" class="StatusValueRaw">
+                    <ui:Label name="StatusValue" data-source-path="Int" class="StatusValue">
+                        <Bindings>
+                            <ui:DataBinding property="text" binding-mode="ToTarget" />
+                        </Bindings>
+                    </ui:Label>
+                </ui:VisualElement>
+                <ui:VisualElement name="StatusValueSpace" class="StatusValueSpace" />
+                <ui:VisualElement name="StatusValueBonus" class="StatusValueBonus">
+                    <ui:Label text="0" name="StatusValue" data-source-path="IntBonus" class="StatusValue" style="-unity-text-align: middle-center;">
+                        <Bindings>
+                            <ui:DataBinding property="text" binding-mode="ToTarget" />
+                        </Bindings>
+                    </ui:Label>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="AdditionalStatusContainer" class="AdditionalStatusContainer" style="flex-grow: 1;">
+                <ui:VisualElement name="AdditionalStatus" class="AdditionalStatus" style="flex-grow: 1; align-content: stretch; justify-content: space-between;">
+                    <ui:Label text="Critical" name="AdditionalStatusName" tooltip="Attack" class="StatusName" />
+                    <ui:Label name="AdditionalStatusValue" text="9999" data-source-path="Critical" class="StatusValue" style="justify-content: flex-start; align-content: flex-start; -unity-text-align: middle-right; width: auto;">
+                        <Bindings>
+                            <ui:DataBinding property="text" binding-mode="ToTarget" />
+                        </Bindings>
+                    </ui:Label>
+                </ui:VisualElement>
+                <ui:VisualElement name="AdditionalStatus" class="AdditionalStatus" style="flex-grow: 1; align-content: stretch; justify-content: space-between; margin-left: 4px;">
+                    <ui:Label text="Aspd" name="AdditionalStatusName" tooltip="Attack" class="StatusName" />
+                    <ui:Label name="AdditionalStatusValue" text="9999" data-source-path="Aspd" class="StatusValue" style="justify-content: flex-start; align-content: flex-start; -unity-text-align: middle-right; width: auto;">
+                        <Bindings>
+                            <ui:DataBinding property="text" binding-mode="ToTarget" />
+                        </Bindings>
+                    </ui:Label>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="StatusRow" class="StatusWindowRow">
+            <ui:Label text="Dex" name="StatusName" tooltip="Strength" class="StatusName" />
+            <ui:VisualElement name="StatusValueBox" class="StatusValueBox">
+                <ui:VisualElement name="StatusValueRaw" class="StatusValueRaw">
+                    <ui:Label text="999 + 999" name="StatusValue" data-source-path="Dex" class="StatusValue">
+                        <Bindings>
+                            <ui:DataBinding property="text" data-source-path="Dex" data-source="project://database/Assets/3rdparty/unityro-resources/Resources/UI/Overlay/Bindings/StatusWindowSource.asset?fileID=11400000&amp;guid=de1c3f269abfa4dd587f6bd90fb12be0&amp;type=2#StatusWindowSource" binding-mode="ToTarget" />
+                        </Bindings>
+                    </ui:Label>
+                </ui:VisualElement>
+                <ui:VisualElement name="StatusValueSpace" class="StatusValueSpace" />
+                <ui:VisualElement name="StatusValueBonus" class="StatusValueBonus">
+                    <ui:Label text="0" name="StatusValue" data-source-path="DexBonus" class="StatusValue" style="-unity-text-align: middle-center;">
+                        <Bindings>
+                            <ui:DataBinding property="text" binding-mode="ToTarget" />
+                        </Bindings>
+                    </ui:Label>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="AdditionalStatusContainer" class="AdditionalStatusContainer" style="flex-grow: 1;">
+                <ui:VisualElement name="AdditionalStatus" class="AdditionalStatus" style="flex-grow: 1; align-content: stretch; justify-content: space-between;">
+                    <ui:Label text="Status Point" name="AdditionalStatusName" tooltip="Status Point" class="StatusName" />
+                    <ui:Label name="AdditionalStatusValue" text="9999" data-source-path="StatusPoints" class="StatusValue" style="justify-content: flex-start; align-content: flex-start; -unity-text-align: middle-right; width: auto;">
+                        <Bindings>
+                            <ui:DataBinding property="text" binding-mode="ToTarget" />
+                        </Bindings>
+                    </ui:Label>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="StatusRow" class="StatusWindowRow">
+            <ui:Label text="Luk" name="StatusName" tooltip="Strength" class="StatusName" />
+            <ui:VisualElement name="StatusValueBox" class="StatusValueBox">
+                <ui:VisualElement name="StatusValueRaw" class="StatusValueRaw">
+                    <ui:Label text="999 + 999" name="StatusValue" data-source-path="Luk" class="StatusValue">
+                        <Bindings>
+                            <ui:DataBinding property="text" binding-mode="ToTarget" />
+                        </Bindings>
+                    </ui:Label>
+                </ui:VisualElement>
+                <ui:VisualElement name="StatusValueSpace" class="StatusValueSpace" />
+                <ui:VisualElement name="StatusValueBonus" class="StatusValueBonus">
+                    <ui:Label text="0" name="StatusValue" data-source-path="LukBonus" class="StatusValue" style="-unity-text-align: middle-center;">
+                        <Bindings>
+                            <ui:DataBinding property="text" binding-mode="ToTarget" />
+                        </Bindings>
+                    </ui:Label>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="AdditionalStatusContainer" class="AdditionalStatusContainer" style="flex-grow: 1;">
+                <ui:VisualElement name="AdditionalStatus" class="AdditionalStatus" style="flex-grow: 1; align-content: stretch; justify-content: space-between;">
+                    <ui:Label text="Guild" name="AdditionalStatusName" tooltip="Guild" class="StatusName" />
+                    <ui:Label name="AdditionalStatusValue" text="9999" data-source-path="Guild" class="StatusValue" style="justify-content: flex-start; align-content: flex-start; -unity-text-align: middle-right; width: auto;">
+                        <Bindings>
+                            <ui:DataBinding property="text" binding-mode="ToTarget" />
+                        </Bindings>
+                    </ui:Label>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
