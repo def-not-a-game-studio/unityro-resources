@@ -100,8 +100,10 @@ Shader "UnityRO/SpriteShaderCustomLight"
                 // The lightmap UV is usually in TEXCOORD1
                 // If lightmaps are disabled, OUTPUT_LIGHTMAP_UV does nothing
                 float3 normal = GetVertexNormalInputs(IN.normal).normalWS;
+
                 float2 lightmapUV;
-                OUTPUT_LIGHTMAP_UV(LightmapUV, unity_LightmapST, lightmapUV);
+                OUTPUT_LIGHTMAP_UV(IN.texcoord1, unity_LightmapST, lightmapUV);
+                
                 // Samples spherical harmonics, which encode light probe data
                 float3 vertexSH;
                 OUTPUT_SH(normal, vertexSH);
