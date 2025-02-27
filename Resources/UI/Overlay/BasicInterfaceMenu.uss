@@ -1,0 +1,55 @@
+.BasicInterfaceButton {
+    width: 48px;
+    height: 48px;
+    background-image: none;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    background-color: rgba(188, 188, 188, 0);
+}
+
+.BasicInterfaceContainer {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+#BasicInterfaceButton_Status:active {
+    background-image: resource('Interface/menu_icon/bt_status_press');
+    background-color: rgba(255, 255, 255, 0);
+}
+
+#BasicInterfaceButton_Status:inactive {
+    background-image: resource('Interface/menu_icon/bt_status');
+    background-color: rgba(255, 255, 255, 0);
+}
+
+#BasicInterfaceButton_Equipment:active {
+    background-image: resource('Interface/menu_icon/bt_equip_press');
+    background-color: rgba(255, 255, 255, 0);
+}
+
+#BasicInterfaceButton_Equipment:inactive {
+    background-image: resource('Interface/menu_icon/bt_equip');
+    background-color: rgba(255, 255, 255, 0);
+}
+
+#BasicInterfaceButton_Inventory:active {
+    background-image: resource('Interface/menu_icon/bt_item_press');
+    background-color: rgba(255, 255, 255, 0);
+}
+
+#BasicInterfaceButton_Inventory:inactive {
+    background-image: resource('Interface/menu_icon/bt_item');
+    background-color: rgba(255, 255, 255, 0);
+}
+
+#BasicInterfaceButton_Skills:active {
+    background-image: resource('Interface/menu_icon/bt_skill_press');
+    background-color: rgba(255, 255, 255, 0);
+}
+
+#BasicInterfaceButton_Skills:inactive {
+    background-image: resource('Interface/menu_icon/bt_skill');
+    background-color: rgba(255, 255, 255, 0);
+}
