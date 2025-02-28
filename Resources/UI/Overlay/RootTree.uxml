@@ -1,6 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <ui:Template name="StatusWindow" src="project://database/Assets/3rdparty/unityro-resources/Resources/UI/Overlay/StatusWindow.uxml?fileID=9197481963319205126&amp;guid=895672b517e524962a9601b79eba1be4&amp;type=3#StatusWindow" />
     <ui:Template name="BasicInterfaceMenu" src="project://database/Assets/3rdparty/unityro-resources/Resources/UI/Overlay/BasicInterfaceMenu.uxml?fileID=9197481963319205126&amp;guid=c8cd141c0b8b649b6b8f49f747b4bc59&amp;type=3#BasicInterfaceMenu" />
-    <ui:Instance template="StatusWindow" name="StatusWindow" enabled="true" style="width: 488px; height: 224px; flex-grow: 0; flex-shrink: 0; position: absolute; top: 254px; left: 410px; display: none;" />
-    <ui:Instance template="BasicInterfaceMenu" style="width: 292px;" />
+    <Style src="project://database/Assets/3rdparty/unityro-resources/Resources/UI/Overlay/RootTree.uss?fileID=7433441132597879392&amp;guid=e45239971fc11414da8b2d02ce198da4&amp;type=3#RootTree" />
+    <ui:Instance template="StatusWindow" name="StatusWindow" enabled="true" style="width: 488px; height: 224px; flex-grow: 0; flex-shrink: 0; position: absolute; top: 254px; left: 410px; display: flex; visibility: hidden;" />
+    <ui:Instance template="BasicInterfaceMenu" name="BasicInterfaceMenu" style="width: 292px;" />
 </ui:UXML>
