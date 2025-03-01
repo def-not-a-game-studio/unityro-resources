@@ -25,6 +25,16 @@ public class StatusWindowSourceScriptableObject : ScriptableObject
     public string Flee;
     public string Critical;
     public string Aspd;
-    public int StatusPoints;
+    public string StatusPoints;
     public string Guild;
+    
+    public string Patk;
+    public string Smatk;
+    public string Res;
+    public string Mres;
+    public string Hplus;
+    public string Crate;
+    public string TraitPoints;
+    public string Ap;
+    public string MaxAp;
 }

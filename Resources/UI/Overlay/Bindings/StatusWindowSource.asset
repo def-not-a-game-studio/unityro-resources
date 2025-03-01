@@ -12,19 +12,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 486b1086452ae4bd89077fea333e73f1, type: 3}
   m_Name: StatusWindowSource
   m_EditorClassIdentifier: 
-  Str: 
-  Agi: 
-  Vit: 
-  Int: 
-  Dex: 
-  Luk: 
-  Atk: 
-  Def: 
-  Matk: 
-  Mdef: 
-  Hit: 
-  Flee: 
-  Critical: 
-  Aspd: 
-  StatusPoints: 0
+  Str: 1 + 2
+  Agi: 1 + 2
+  Vit: 1 + 2
+  Int: 1 + 2
+  Dex: 1 + 2
+  Luk: 1 + 2
+  StrBonus: 0
+  AgiBonus: 0
+  VitBonus: 0
+  IntBonus: 0
+  DexBonus: 0
+  LukBonus: 0
+  Atk: 2 - 17
+  Def: 2 - 10
+  Matk: 0 - 1
+  Mdef: 2 - 0
+  Hit: 179
+  Flee: 104 - 1
+  Critical: 1
+  Aspd: 590 - 0
+  StatusPoints: 51
   Guild: 
+  Patk: 0+
+  Smatk: 0
+  Res: 0
+  Mres: 0
+  Hplus: 0
+  Crate: 0
+  TraitPoints: 0
+  Ap: 
+  MaxAp: 
