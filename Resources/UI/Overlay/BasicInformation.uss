@@ -7,12 +7,31 @@
     align-self: auto;
     align-content: auto;
     align-items: center;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    padding-top: 2px;
 }
 
 .WindowTitleText {
     flex-direction: row;
     -unity-text-align: middle-left;
     font-size: 10px;
+}
+
+.WindowLabel {
+    font-size: 10px;
+    -unity-text-align: middle-left;
+}
+
+.ProgressBar {
+    height: 8px;
+}
+
+.unity-progress-bar {
+    height: 8px;
+}
+
+.unity-progress-bar__container {
+    height: 8px;
+    min-height: 8px;
 }
