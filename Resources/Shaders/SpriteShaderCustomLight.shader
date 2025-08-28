@@ -42,7 +42,6 @@ Shader "UnityRO/SpriteShaderCustomLight"
             #pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
             #pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile _ DYNAMICLIGHTMAP_ON
-            #pragma multi_compile _ DIRLIGHTMAP_COMBINED
 
             #pragma vertex vert
             #pragma fragment frag
@@ -60,6 +59,9 @@ Shader "UnityRO/SpriteShaderCustomLight"
                 float3 diff : COLOR0;
                 float3 ambient : COLOR1;
                 float4 color : COLOR2;
+                float2 lightmapUV : TEXCOORD4;
+                float3 normalWS   : TEXCOORD5;
+                float3 sh         : TEXCOORD6;
             };
 
             struct Attributes
@@ -101,14 +103,9 @@ Shader "UnityRO/SpriteShaderCustomLight"
                 // If lightmaps are disabled, OUTPUT_LIGHTMAP_UV does nothing
                 float3 normal = GetVertexNormalInputs(IN.normal).normalWS;
 
-                float2 lightmapUV;
-                OUTPUT_LIGHTMAP_UV(IN.texcoord1, unity_LightmapST, lightmapUV);
-                
-                // Samples spherical harmonics, which encode light probe data
-                float3 vertexSH;
-                OUTPUT_SH(normal, vertexSH);
-                // This function calculates the final baked lighting from light maps or probes
-                OUT.diff = SAMPLE_GI(lightmapUV, vertexSH, normal);
+                OUTPUT_LIGHTMAP_UV(IN.texcoord1, unity_LightmapST, OUT.lightmapUV);
+                OUTPUT_SH(normal, OUT.sh);
+                OUT.normalWS = normal;
 
                 return OUT;
             }
@@ -122,7 +119,8 @@ Shader "UnityRO/SpriteShaderCustomLight"
 
                 // ensures we never get too dark neither too bright
                 half shadowAmount = clamp(GetMainLight(IN.shadowCoords).shadowAttenuation, 0.4, 1.0);
-                float3 diff = max(float3(0.1, 0.1, 0.1), min(float3(0.6, 0.6, 0.6), IN.diff));
+                float3 indiff = SAMPLE_GI(IN.lightmapUV, IN.sh, IN.normalWS);
+                float3 diff = max(float3(0.1, 0.1, 0.1), min(float3(0.6, 0.6, 0.6), indiff));
                 float3 lighting = diff * shadowAmount + (_MainLightColor * 0.55);
                 // TODO: figure this out
                 // if (_AttenuateAmbient)
