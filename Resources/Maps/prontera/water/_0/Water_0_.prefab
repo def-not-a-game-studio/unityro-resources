@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6185945790496480876
+--- !u!1 &1366156698374012992
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,24 +8,24 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8421280278943350161}
-  - component: {fileID: 3352597269857080374}
-  - component: {fileID: 5166000236377144202}
-  - component: {fileID: 4486292583304255375}
+  - component: {fileID: 4942039598983914695}
+  - component: {fileID: 8471378942395610161}
+  - component: {fileID: 2520969630248714113}
+  - component: {fileID: 5976649612534657595}
   m_Layer: 4
   m_Name: Water_0_
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
---- !u!4 &8421280278943350161
+--- !u!4 &4942039598983914695
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6185945790496480876}
+  m_GameObject: {fileID: 1366156698374012992}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -34,18 +34,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3352597269857080374
+--- !u!114 &8471378942395610161
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6185945790496480876}
+  m_GameObject: {fileID: 1366156698374012992}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 84e3f20901222b84faa7cd228c36f052, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: UnityRO.core::Assets.Scripts.Renderer.Map.WaterRenderer
   WaterInfo:
     textureSize: 256
     level: 4.6
@@ -87,35 +87,40 @@ MonoBehaviour:
     - "data/texture/\xBF\xF6\xC5\xCD/water029.jpg"
     - "data/texture/\xBF\xF6\xC5\xCD/water030.jpg"
     - "data/texture/\xBF\xF6\xC5\xCD/water031.jpg"
---- !u!33 &5166000236377144202
+--- !u!33 &2520969630248714113
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6185945790496480876}
-  m_Mesh: {fileID: 4300000, guid: 952e3c0874ea5614a9f2ca97284d72fb, type: 2}
---- !u!23 &4486292583304255375
+  m_GameObject: {fileID: 1366156698374012992}
+  m_Mesh: {fileID: 4300000, guid: e69c76829ccfb48bc9f481445018c1f6, type: 2}
+--- !u!23 &5976649612534657595
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6185945790496480876}
+  m_GameObject: {fileID: 1366156698374012992}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1c4ed49f356d4db43b02da0b4b6e798e, type: 2}
+  - {fileID: 2100000, guid: 5dde70f9c0d4a4694ac61d0187bdb162, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -133,6 +138,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
